@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="vkontakte.svoka.addon"
-       name="VKontakte"
+<addon id="xbmc-vk.svoka.com"
+       name="VKontakte Search"
        version="0.1"
        provider-name="shchvova">
   <requires>

@@ -21,7 +21,7 @@ except ImportError:
 APP_ID = "2054573"
 
 
-__settings__ = xbmcaddon.Addon(id='vkontakte.svoka.addon')
+__settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
 __language__ = __settings__.getLocalizedString
 USERNAME = __settings__.getSetting('username')
 USERPASS = __settings__.getSetting('password')
@@ -58,7 +58,7 @@ http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=16
 
 
 
-PLUGIN_NAME = 'VKontakte'
+PLUGIN_NAME = 'VKontakte Search'
 
 
 vkcookiefile = os.path.join(xbmc.translatePath('special://temp/'), 'vkontakte-cookie.sess')
