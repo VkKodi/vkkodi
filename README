@@ -1,0 +1,43 @@
+== Welcome ==
+
+for more info visit 
+=========================================
+http://code.svoka.com/vk-xbmc-plugin
+=========================================
+
+You are reading vk-xbmc-plugin help.
+This plugin allows to watch videos from VKontakte social network within XBMC media center.
+
+=== Info ===
+This is free software. Information about author and source code available at http://code.svoka.com/vk-xbmc-plugin
+
+=== Installation instruction ===
+
+# **XBMC Version < 10**
+## download latest release by cloning this repository
+## copy xbmc-vk.svoka.com to your [[http://wiki.xbmc.org/?title=HOW-TO_install_and_use_plugins_in_XBMC#Manually_installing_plugins|XBMC plugin folder]]
+# **XBMC Version 10 Dharma: **:
+## download last zip from http://code.svoka.com/vk-xbmc-plugin/downloads
+## in go to XBMC menu go to SYSTEM -> Add-ons -> Install from zip file
+## select downloaded file
+# return to main XBMC menu and select Video -> Video Addons -> VKontakte Search
+# **do NOT press OK until you would be told to**
+# this is where tricky part starts: plugin will ask you to open text file and follow instructions inside it. Here is those instructions:
+## copy link from text file
+## open it in browser ad allow application to access videos in VKontakte (/this is just for search issues, no one will mess with your videos/)
+## At the end of authorization you should be forwarded to sucess auth page
+## Copy link of that page and paste it to the last line (which is empty) in textfile
+## Save test file
+## Close text editor
+# Press `Return` key in XBMC
+# you will be asked to enter your login email and password from VK social network (required to get videos)
+# Done!
+
+=== Usage ===
+If you did setup ad-don properly, it is going to show you text input whenever you access it. Enter search string to look for video.
+After you'll get list of videos with preview pictures and length. After selectin name of video you should get list of available resolutions. Select one to begin playback.
+
+=== Notice ===
+This is free software in super early alpha. You can make it better by forking and contributing code.
+
+**Cheers**

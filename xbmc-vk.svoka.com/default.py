@@ -1,5 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Writen by me, yeah! Shchvova (www.svoka.com)
+# Please leave my copyrights here cause as you can notice
+# "Copyright" always means "absolutely right copying".
+# Illegal copying of this code prohibited by real patsan's law!
 
 import urllib, urllib2, cookielib, re, xbmcaddon, string, xbmc, xbmcgui, xbmcplugin, os, httplib, socket
 import base64
@@ -281,8 +285,9 @@ if api.vkcookie:
         xbmcplugin.endOfDirectory(handle)
     elif sys.argv[2][:2]=="?L":
         vf = api.getVideoFile("http://vkontakte.ru/video"  + sys.argv[2][2:])
-        for a in vf:
-            listitem = xbmcgui.ListItem(a[-8:])
-            xbmcplugin.addDirectoryItem(handle, a, listitem)
+        if vf:
+            for a in vf:
+                listitem = xbmcgui.ListItem(a[-8:])
+                xbmcplugin.addDirectoryItem(handle, a, listitem)
         xbmcplugin.setPluginCategory(handle, PLUGIN_NAME)
         xbmcplugin.endOfDirectory(handle)
