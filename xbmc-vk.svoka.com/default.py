@@ -35,13 +35,16 @@ LOGIN_URL = __settings__.getSetting('authUrl')
 while not LOGIN_URL.startswith("http://vkontakte.ru/api/login_success.html"):
     filePath = xbmc.translatePath("special://temp/vk.txt")
     fl = open(filePath, 'w')
-    fl.write("""# Follow this link in your browser:
+    strQ = """# Follow this link in your browser:
 http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=16
-# you will be redirected to page with text 'Login success'",
+# you will be redirected to page with text 'Login success',
 # copy ADDRESS of page containing 'Login sucess' text to next empty line in this file, save and close it
 # return to XBMC and press ok (after closing this file)
 
-""" % APP_ID)
+""" % APP_ID
+    if xbmc.getCondVisibility( "system.platform.windows" ):
+        strQ = strQ.replace("\n","\r\n")
+    fl.write(strQ)
     fl.close()
     urr = xbmc.Keyboard()
     urr.setHeading("Open file and follow instructions in it")
