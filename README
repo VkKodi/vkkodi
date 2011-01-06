@@ -1,22 +1,12 @@
 ﻿== Welcome / Привет == 
-this is copy (outdadet?) of/это копия (устаревшая?) странички
-http://code.svoka.com/vk-xbmc-plugin
 
-
-You are reading vk-xbmc-plugin help.
-This plugin allows to watch videos from VKontakte social network within XBMC media center.
-====Known issues:====
-* .flv files seems not working (
-* submit another or check existing with [[http://code.svoka.com/vk-xbmc-plugin/issues|issue tracker]]
+You are reading vk-xbmc-plugin documentation.
+This add-on allows to watch videos from VKontakte social network within XBMC media center.
 
 
 Вы читаете справку vk-xbmc-plugin.
 Это адд-он, расширение для медиацента XBMC, которое позволяет искать и просматривать видео с ВКонтакта (сайтов vkontakte.ru и vk.com)
-====Известные проблемы:====
-* .flv файлы кажется не проигрываются (
-* добавьте или посмотрите другие в [[http://code.svoka.com/vk-xbmc-plugin/issues|cписке проблем]]
 
-----
 
 == Quick intro ==
 ==== русский перевод ниже ===
@@ -26,33 +16,20 @@ This is free software. Information about author and source code available at htt
 
 === Installation instruction ===
 
-# **XBMC Version < 10**
-## download latest release by cloning this repository (or dowload archived from "Downloads" section)
-## copy xbmc-vk.svoka.com to your [[http://wiki.xbmc.org/?title=HOW-TO_install_and_use_plugins_in_XBMC#Manually_installing_plugins|XBMC plugin folder]]
-# **XBMC version 10 Dharma and higher: **:
-## download last zip from http://code.svoka.com/vk-xbmc-plugin/downloads
-## in go to XBMC menu go to SYSTEM -> Add-ons -> Install from zip file
-## select downloaded file
-# return to main XBMC menu and select Video -> Video Addons -> VKontakte Search
-# **do NOT press OK until you would be told to**
-# this is where tricky part starts: plugin will ask you to open text file and follow instructions inside it. File path could be different on platforms, f.e. on windows it's %APPDATA%\XBMC\cache\vk.txt, linux & mac ~\.xbmc\temp\vk.txt
-# Here is those instructions inside file:
-## copy link from text file
-## open it in browser ad allow application to access videos in VKontakte (/this is just for search issues, no one will mess with your videos/)
-## At the end of authorization you should be forwarded to sucess auth page
-## Copy link of that page and paste it to the last line (which is empty) in textfile
-## Save test file
-## Close text editor
-# Press `Return` key in XBMC
+# download latest zip from http://code.svoka.com/vk-xbmc-plugin/downloads
+# in XBMC follow menu "SYSTEM -> Add-ons -> Install from zip file"
+# select downloaded file
+# return to main XBMC menu and select Video -> Video Addons -> VK-xmbc
+# wait for browser to appear and follow instructions to authorize application in VKontakte
 # you will be asked to enter your login email and password from VK social network (required to get videos)
 # Done!
 
 === Usage ===
-If you did setup ad-don properly, it is going to show you text input whenever you access it. Enter search string to look for video.
+If you did setup add-on properly, it is going to show you text input whenever you access it. Enter search string to look for video.
 After you'll get list of videos with preview pictures and length. After selectin name of video you should get list of available resolutions. Select one to begin playback.
 
 === Notice ===
-This is free software in super early alpha. You can make it better by forking and contributing code.
+This is free software in extremely early alpha. You can make it better by forking and contributing code, reporting issues or creating feature requests using [[http://code.svoka.com/vk-xbmc-plugin/issues|issue tracker]]
 
 **Cheers**
 
@@ -64,24 +41,12 @@ This is free software in super early alpha. You can make it better by forking an
 Это свободное ПО. Информацию об авторе и всякое другое лежит по адресу http://code.svoka.com/vk-xbmc-plugin
 
 === Установка ===
-# **XBMC версии < 10**
-## скачайте исходный код с этого репозитория (или распакуйте архив в разделе Downloads)
-## скопируйте распакованную папку xbmc-vk.svoka.com в вашу папку [[http://wiki.xbmc.org/?title=HOW-TO_install_and_use_plugins_in_XBMC#Manually_installing_plugins|плагинов XBMC]]
 # **XBMC версии 10 Dharma и выше: **:
-## скачайте последний zip файл  с http://code.svoka.com/vk-xbmc-plugin/downloads
-## В XBMC меню откройте "SYSTEM -> Add-ons -> Install from zip file (Установка с zip архива)"
-## выберите скачанный только что файл
-# Вернитесь в главное меню XBMC, и выберите  Video -> Video Addons -> VKontakte Search
-# **НЕ НАЖИМАЙТЕ "ВВОД"**
-# здесь пару фокусов: плагин попросит вас открыть файл, и в поле ввода напишет путь к файлу. Откройте этот файл текстовым редактором и следуйте инструкциям в нем. Путь к файлу может быть разным, например для Windows %APPDATA%\XBMC\cache\vk.txt, linux & mac ~\.xbmc\temp\vk.txt (если у вас Windwos, вы можете нажать Пуск -> Выполнить, вставить туда строку "notepad %APPDATA%\XBMC\cache\vk.txt" без скобок и нажать ОК что бы открыть файл. Для Windows 7 можно просто вставить строку в поле ввода сразу над кнопкой Пуск )
-# Что делать с файлом:
-## В файле будет ссылка. Скопируйте ее
-## откройте в месте где вы смотрите ВКонтакт эту ссылку, и авторизируйте приложение. (/приложению нужен доступ только что бы искать видео, ничего личного/)
-## После успешной авторизации вы будете переправлены на страницу со словами "Login success". Скопируйте полный адрес этой страницы
-## Вставьте адрес в пустую строчку в файле (строчка получится длинная, но не волнуйтесь, НЕ НУЖНО ее разделять пробелами, или новыми строками). Просто вставьте в последнюю строку файла.
-## Сохраните файл
-## Закройте редактор
-# Вот теперь нажмите `Ввод` в XBMC
+# скачайте последний zip файл  с http://code.svoka.com/vk-xbmc-plugin/downloads
+# В XBMC меню откройте "SYSTEM -> Add-ons -> Install from zip file (Установка с zip архива)"
+# выберите скачанный только что файл
+# Вернитесь в главное меню XBMC, и выберите  Video -> Video Addons -> VK-xmbc
+# При первом зпуске буте открыт браузер со страницей авторизации приложения во ВКонтакте. Нажмите ввод по окончанию авторизации
 # Если вы все правильно сделали и все работает, то приложение спросит у вас email и пароль от ВКонтакта. После этого покажет текстовое поле "search" для поиска
 # Все!
 
