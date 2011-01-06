@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="xbmc-vk.svoka.com"
-       name="VKontakte Search"
-       version="0.1"
+       name="VK-xbmc"
+       version="0.2"
        provider-name="shchvova">
   <requires>
     <import addon="xbmc.python" version="1.0"/>

@@ -5,11 +5,13 @@
 # "Copyright" always means "absolutely right copying".
 # Illegal copying of this code prohibited by real patsan's law!
 
-import urllib, urllib2, cookielib, re, xbmcaddon, string, xbmc, xbmcgui, xbmcplugin, os, httplib, socket
+import sys,urllib, urllib2, cookielib, re, xbmcaddon, string, xbmc, xbmcgui, xbmcplugin, os, httplib, socket
 import base64
 import random
 import sha
 import datetime
+
+import webbrowser
 
 try:
     import json
@@ -21,7 +23,6 @@ try:
 except ImportError:
    from md5 import md5
 
-
 APP_ID = "2054573"
 
 
@@ -31,45 +32,15 @@ USERNAME = __settings__.getSetting('username')
 USERPASS = __settings__.getSetting('password')
 handle = int(sys.argv[1])
 
-LOGIN_URL = __settings__.getSetting('authUrl')
-while not LOGIN_URL.startswith("http://vkontakte.ru/api/login_success.html"):
-    filePath = xbmc.translatePath("special://temp/vk.txt")
-    fl = open(filePath, 'w')
-    strQ = """# Follow this link in your browser:
-http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=16
-# you will be redirected to page with text 'Login success',
-# copy ADDRESS of page containing 'Login sucess' text to next empty line in this file, save and close it
-# return to XBMC and press ok (after closing this file)
+LOGIN_URL = ""
 
-""" % APP_ID
-    if xbmc.getCondVisibility( "system.platform.windows" ):
-        strQ = strQ.replace("\n","\r\n")
-    fl.write(strQ)
-    fl.close()
-    urr = xbmc.Keyboard()
-    urr.setHeading("Open file and follow instructions in it")
-    urr.setDefault(filePath)
-    urr.doModal()
-    if (urr.isConfirmed()):
-        fl = open(filePath, 'r')
-        for line in fl.readlines():
-            if line.strip().startswith("http://vkontakte.ru/api/login_success.html"):
-                LOGIN_URL = line.strip()
-                __settings__.setSetting('authUrl', LOGIN_URL)
-                fl.close()
-                os.remove(filePath)
-                break
-        fl.close()
-    else:
-        sys.exit()
+PLUGIN_NAME = 'VK-xbmc'
 
-
-
-PLUGIN_NAME = 'VKontakte Search'
-
+USER_AUTH_URL  = "http://j.mp/vk-xmbc"
 
 vkcookiefile = os.path.join(xbmc.translatePath('special://temp/'), 'vkontakte-cookie.sess')
 saved_search = os.path.join(xbmc.translatePath('special://temp/'), 'vk-search.sess')
+authUrlFile = os.path.join(xbmc.translatePath('special://temp/'), 'vk-auth-url.sess')
 
 
 
@@ -88,7 +59,7 @@ class VkontakteCookie:
                                  'pass' : self.password,
                                  'vk' : ''})
 
-        headers = {'User-Agent' : 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13 (.NET CLR 3.5.30729)',
+        headers = {'User-Agent' : 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13',
                    'Host' : 'login.vk.com',
                    'Referer' : 'http://vkontakte.ru/index.php',
                    'Connection' : 'close',
@@ -124,19 +95,10 @@ class VkontakteCookie:
             raise Exception('Wront login')
         return self.cookie
 
-
+# http://vkontakte.ru/login.php?app=2054573&layout=popup&type=browser&settings=16
 class VkiApi:
-
-    @classmethod
-    def fromURL(cls, url):
-        # http://vkontakte.ru/login.php?app=2054573&layout=popup&type=browser&settings=16
-        decoded=urllib.unquote(url)
-        start = decoded.find("{")
-        obj = json.loads(decoded[start:])
-        return cls(APP_ID, obj["sid"], obj["mid"], obj["secret"])
-
-    def __init__(self, api_id, sid, mid, secret):
-        global USERNAME, USERPASS
+    def __init__(self):
+        global USERNAME, USERPASS, LOGIN_URL
         self.vkcookie = None
         if os.path.isfile(vkcookiefile):
             fh= open(vkcookiefile, 'r')
@@ -155,7 +117,16 @@ class VkiApi:
         fh= open(vkcookiefile, 'w')
         fh.write(self.vkcookie)
         fh.close()
-        
+
+        #auth vk app
+        if not LOGIN_URL:
+            self.AuthVKApp()
+
+        decoded=urllib.unquote(LOGIN_URL)
+        start = decoded.find("{")
+        obj = json.loads(decoded[start:])
+        api_id, sid, mid, secret = (APP_ID, obj["sid"], obj["mid"], obj["secret"])
+
         self.param = dict()
         self.param["v"] = "3.0"
         self.param["format"] = "JSON"
@@ -163,6 +134,47 @@ class VkiApi:
         self.param["sid"] = sid
         self.mid = str(mid)
         self.secret = str(secret)
+
+
+        
+    def AuthVKApp(self, showBrowser = False):
+        global LOGIN_URL
+        authUrl = "http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=16" % APP_ID
+
+        if showBrowser:
+            if xbmc.getCondVisibility( "system.platform.windows" ):
+                os.system('start %s'% USER_AUTH_URL) #becouse of troubles handling "" in windows command line Oo
+            else:
+                os.system('open "%s"'% authUrl)
+
+            kb = xbmc.Keyboard()
+            kb.setHeading("if browser didn't show up, open")
+            kb.setDefault(USER_AUTH_URL)
+            kb.doModal()
+            if(not kb.isConfirmed()):
+                return
+
+        proc = urllib2.HTTPCookieProcessor()
+        proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', self.vkcookie,
+                                   '80', False, 'vkontakte.ru', True, False, '/',
+                                   True, False, None, False, None, None, None))
+        opener = urllib2.build_opener(urllib2.HTTPHandler(), proc)
+        opener.addheaders.append(('User-agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13'))
+        opener.addheaders.append(('Referer', authUrl))
+        LOGIN_URL = opener.open(authUrl).url
+        opener.close()
+
+        if not LOGIN_URL.startswith("http://vkontakte.ru/api/login_success"):
+            LOGIN_URL = ""
+            #try again with browser, app is not authorized
+            self.AuthVKApp(True)
+            return
+
+        fl = open(authUrlFile, "w")
+        fl.write(LOGIN_URL)
+        fl.close()
+
+        
 
     def call(self, api, **vars):
         v = {"method" : api}
@@ -191,6 +203,8 @@ class VkiApi:
         else:
             return resp["response"]
 
+        
+
     def getVideoFile(self, url):
         proc = urllib2.HTTPCookieProcessor()
         proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', self.vkcookie,
@@ -207,19 +221,22 @@ class VkiApi:
             return None
 
         flashPlayerParams = videoReply[index+len(bg)-1:videoReply.find("},", index)+1]
+
         prs = json.loads(flashPlayerParams)
         urlStart = prs["host"] + "u" + str(prs["uid"]) + "/video/" + str(prs["vtag"])
+
         rsls = ["240", "360", "480", "720", "1080"]
         videoURLs = []
         if prs["no_flv"]!=1:
+            if str(prs["uid"])=="0": #strange bhvour on old videos
+                urlStart = "http://" + prs["host"] + "/assets/videos/" + str(prs["vtag"]) + str(prs["vid"]) + ".vk"
             videoURLs.append(urlStart + ".flv")
+
         if prs["hd"]>0:
             for i in range(prs["hd"]+1):
                 videoURLs.append(urlStart + "." + rsls[i] + ".mp4")
         videoURLs.reverse()
         return videoURLs
-
-
 
 
 
@@ -245,12 +262,23 @@ def askLogin():
     else:
         return False
 
-try:
-    api = VkiApi.fromURL(LOGIN_URL)
-except Exception:
-    __settings__.setSetting('authUrl', "")
 
-if api.vkcookie:
+if os.path.isfile(authUrlFile):
+    f = open(authUrlFile, "r")
+    LOGIN_URL = f.read()
+    f.close()
+
+api = None
+try:
+    api = VkiApi()
+except Exception , e:
+    if os.path.isfile(authUrlFile):
+        os.remove(authUrlFile)
+    xbmc.output("Error" + repr(e))
+    raise e
+
+
+if api and api.vkcookie:
     if sys.argv[2]:
         print sys.argv[2][0]
     if not sys.argv[2] or sys.argv[2][:2]=='?S':
@@ -291,6 +319,13 @@ if api.vkcookie:
         if vf:
             for a in vf:
                 listitem = xbmcgui.ListItem(a[-8:])
+                xbmc.output("--- "+a)
                 xbmcplugin.addDirectoryItem(handle, a, listitem)
         xbmcplugin.setPluginCategory(handle, PLUGIN_NAME)
         xbmcplugin.endOfDirectory(handle)
+else:
+    listitem = xbmcgui.ListItem("-- something wrong, try again --")
+    xbmcplugin.addDirectoryItem(handle, sys.argv[0], listitem, True)
+    xbmcplugin.setPluginCategory(handle, PLUGIN_NAME)
+    xbmcplugin.endOfDirectory(handle)
+    xbmc.output("THIS IS THE END")

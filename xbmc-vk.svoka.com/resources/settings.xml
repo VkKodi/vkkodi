@@ -2,5 +2,4 @@
 <settings>
 	<setting id="username" type="text" label="30001" default="" />
 	<setting id="password" type="text" label="30002" option="hidden" default="" />
-    <setting id="authUrl" type="text" label="30001" default="" />
 </settings>
