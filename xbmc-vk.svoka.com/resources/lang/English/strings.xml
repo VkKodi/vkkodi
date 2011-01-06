@@ -2,4 +2,6 @@
 <strings>
         <string id="30001">VKontakte email</string>
         <string id="30002">Password</string>
+        <string id="30003">Search video</string>
+        <string id="30004">If browser didn't show up, open</string>
 </strings>
