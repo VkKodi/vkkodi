@@ -148,6 +148,7 @@ class VkiApi:
                 os.system('open "%s"'% authUrl)
 
             kb = xbmc.Keyboard()
+            kb.setHiddenInput(False)
             kb.setHeading("if browser didn't show up, open")
             kb.setDefault(USER_AUTH_URL)
             kb.doModal()
@@ -244,6 +245,7 @@ def askLogin():
     global USERNAME, USERPASS
     user_keyboard = xbmc.Keyboard()
     user_keyboard.setHeading("Vkontakte email")
+    user_keyboard.setHiddenInput(False)
     user_keyboard.setDefault(USERNAME)
     user_keyboard.doModal()
     if (user_keyboard.isConfirmed()):
@@ -285,6 +287,7 @@ if api and api.vkcookie:
         query = ""
         result = None
         searchLineKbd = xbmc.Keyboard()
+        searchLineKbd.setHiddenInput(False)
         searchLineKbd.setHeading("Search query")
         if os.path.isfile(saved_search):
             fl = open(saved_search,"r")
