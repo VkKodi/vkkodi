@@ -36,7 +36,7 @@ LOGIN_URL = ""
 
 PLUGIN_NAME = 'VK-xbmc'
 
-USER_AUTH_URL  = "http://j.mp/vk-xmbc"
+USER_AUTH_URL  = "http://j.mp/vk-xbmc"
 
 vkcookiefile = os.path.join(xbmc.translatePath('special://temp/'), 'vkontakte-cookie.sess')
 saved_search = os.path.join(xbmc.translatePath('special://temp/'), 'vk-search.sess')
@@ -193,13 +193,13 @@ class VkiApi:
         request = "&".join(["%s=%s" % (str(key), urllib.quote(str(v[key]))) for key in v.keys()])
         request_url = "http://vkontakte.ru/api.php?"+request
 
-        print request_url
         reply = urllib.urlopen(request_url)
         #replystr = reply.read()
         #resp = json.loads(replystr)
         resp = json.load(reply)
         if "error" in resp:
-            print "Error" + resp;
+            if os.path.isfile(authUrlFile):
+                os.remove(authUrlFile)
             return None
         else:
             return resp["response"]
