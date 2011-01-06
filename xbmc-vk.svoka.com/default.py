@@ -28,6 +28,8 @@ APP_ID = "2054573"
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
 __language__ = __settings__.getLocalizedString
+
+
 USERNAME = __settings__.getSetting('username')
 USERPASS = __settings__.getSetting('password')
 handle = int(sys.argv[1])
@@ -149,7 +151,7 @@ class VkiApi:
 
             kb = xbmc.Keyboard()
             kb.setHiddenInput(False)
-            kb.setHeading("if browser didn't show up, open")
+            kb.setHeading(__language__(30004))
             kb.setDefault(USER_AUTH_URL)
             kb.doModal()
             if(not kb.isConfirmed()):
@@ -244,14 +246,14 @@ class VkiApi:
 def askLogin():
     global USERNAME, USERPASS
     user_keyboard = xbmc.Keyboard()
-    user_keyboard.setHeading("Vkontakte email")
+    user_keyboard.setHeading(__language__(30001))
     user_keyboard.setHiddenInput(False)
     user_keyboard.setDefault(USERNAME)
     user_keyboard.doModal()
     if (user_keyboard.isConfirmed()):
         USERNAME = user_keyboard.getText()
         pass_keyboard = xbmc.Keyboard()
-        pass_keyboard.setHeading("Password")
+        pass_keyboard.setHeading(__language__(30002))
         pass_keyboard.setHiddenInput(True)
         pass_keyboard.doModal()
         if (pass_keyboard.isConfirmed()):
@@ -288,7 +290,7 @@ if api and api.vkcookie:
         result = None
         searchLineKbd = xbmc.Keyboard()
         searchLineKbd.setHiddenInput(False)
-        searchLineKbd.setHeading("Search query")
+        searchLineKbd.setHeading(__language__(30003))
         if os.path.isfile(saved_search):
             fl = open(saved_search,"r")
             searchLineKbd.setDefault(fl.read())
