@@ -23,21 +23,16 @@ try:
 except ImportError:
    from md5 import md5
 
-APP_ID = "2054573"
 
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
 __language__ = __settings__.getLocalizedString
 
 
-USERNAME = __settings__.getSetting('username')
-USERPASS = __settings__.getSetting('password')
 handle = int(sys.argv[1])
 
-LOGIN_URL = ""
-
+APP_ID = "2054573"
 PLUGIN_NAME = 'VK-xbmc'
-
 USER_AUTH_URL  = "http://j.mp/vk-xbmc"
 
 vkcookiefile = os.path.join(xbmc.translatePath('special://temp/'), 'vkontakte-cookie.sess')
@@ -100,35 +95,21 @@ class VkontakteCookie:
 # http://vkontakte.ru/login.php?app=2054573&layout=popup&type=browser&settings=16
 class VkiApi:
     def __init__(self):
-        global USERNAME, USERPASS, LOGIN_URL
         self.vkcookie = None
-        if os.path.isfile(vkcookiefile):
-            fh= open(vkcookiefile, 'r')
-            self.vkcookie = fh.read()
-            fh.close()
-
-        while not self.vkcookie:
-            try:
-                cookieObj = VkontakteCookie(USERNAME, USERPASS)
-                self.vkcookie = cookieObj.get_cookie()
-            except Exception:
-                self.vkcookie = None
-                if not askLogin():
-                    return
-
-        fh= open(vkcookiefile, 'w')
-        fh.write(self.vkcookie)
-        fh.close()
-
+        self.initCookie()
+        
         #auth vk app
-        if not LOGIN_URL:
-            self.AuthVKApp()
+        loginSuccessUrl = self.AuthVKApp()
+        if not loginSuccessUrl:
+            self.vkcookie = None
+            return
 
-        decoded=urllib.unquote(LOGIN_URL)
+        decoded=urllib.unquote(loginSuccessUrl)
         start = decoded.find("{")
         obj = json.loads(decoded[start:])
         api_id, sid, mid, secret = (APP_ID, obj["sid"], obj["mid"], obj["secret"])
 
+        #param is API call parameters
         self.param = dict()
         self.param["v"] = "3.0"
         self.param["format"] = "JSON"
@@ -137,15 +118,64 @@ class VkiApi:
         self.mid = str(mid)
         self.secret = str(secret)
 
+    def initCookie(self, resetCookie=False):
+        self.vkcookie = None
+        if os.path.isfile(vkcookiefile):
+            if resetCookie:
+                xbmc.output("reset cookie")
+                os.remove(vkcookiefile)
+            else:
+                fh= open(vkcookiefile, 'r')
+                self.vkcookie = fh.read()
+                fh.close()
 
+        while not self.vkcookie:
+            try:
+                cookieObj = VkontakteCookie(__settings__.getSetting('username'), 
+                                            __settings__.getSetting('password'))
+                self.vkcookie = cookieObj.get_cookie()
+            except Exception:
+                self.vkcookie = None
+                if not self.askLogin():
+                    return
+
+        fh= open(vkcookiefile, 'w')
+        fh.write(self.vkcookie)
+        fh.close()
+
+    def askLogin():
+        user_keyboard = xbmc.Keyboard()
+        user_keyboard.setHeading(__language__(30001))
+        user_keyboard.setHiddenInput(False)
+        user_keyboard.setDefault(__settings__.getSetting('username'))
+        user_keyboard.doModal()
+        if (user_keyboard.isConfirmed()):
+            userName = user_keyboard.getText()
+            pass_keyboard = xbmc.Keyboard()
+            pass_keyboard.setHeading(__language__(30002))
+            pass_keyboard.setHiddenInput(True)
+            pass_keyboard.doModal()
+            if (pass_keyboard.isConfirmed()):
+                __settings__.setSetting('username', userName)
+                __settings__.setSetting('password', pass_keyboard.getText())
+                return True
+            else:
+                return False
+        else:
+            return False
         
+
     def AuthVKApp(self, showBrowser = False):
-        global LOGIN_URL
         authUrl = "http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=16" % APP_ID
+        ret = ""
+        if os.path.isfile(authUrlFile):
+            f = open(authUrlFile, "r")
+            ret = f.read()
+            f.close()
 
         if showBrowser:
             if xbmc.getCondVisibility( "system.platform.windows" ):
-                os.system('start %s'% USER_AUTH_URL) #becouse of troubles handling "" in windows command line Oo
+                os.system('start %s'% USER_AUTH_URL) #Windows su^W can't hadle full url
             else:
                 os.system('open "%s"'% authUrl)
 
@@ -155,7 +185,7 @@ class VkiApi:
             kb.setDefault(USER_AUTH_URL)
             kb.doModal()
             if(not kb.isConfirmed()):
-                return
+                return ""
 
         proc = urllib2.HTTPCookieProcessor()
         proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', self.vkcookie,
@@ -164,18 +194,20 @@ class VkiApi:
         opener = urllib2.build_opener(urllib2.HTTPHandler(), proc)
         opener.addheaders.append(('User-agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13'))
         opener.addheaders.append(('Referer', authUrl))
-        LOGIN_URL = opener.open(authUrl).url
+        ret = opener.open(authUrl).url
         opener.close()
 
-        if not LOGIN_URL.startswith("http://vkontakte.ru/api/login_success"):
-            LOGIN_URL = ""
+        if not ret.startswith("http://vkontakte.ru/api/login_success"):
+            if showBrowser:
+                #this is third or more time we got here. Lets try to reset cookie
+                self.initCookie(True)
             #try again with browser, app is not authorized
-            self.AuthVKApp(True)
-            return
+            return self.AuthVKApp(True)
 
         fl = open(authUrlFile, "w")
-        fl.write(LOGIN_URL)
+        fl.write(ret)
         fl.close()
+        return ret
 
         
 
@@ -243,34 +275,6 @@ class VkiApi:
 
 
 
-def askLogin():
-    global USERNAME, USERPASS
-    user_keyboard = xbmc.Keyboard()
-    user_keyboard.setHeading(__language__(30001))
-    user_keyboard.setHiddenInput(False)
-    user_keyboard.setDefault(USERNAME)
-    user_keyboard.doModal()
-    if (user_keyboard.isConfirmed()):
-        USERNAME = user_keyboard.getText()
-        pass_keyboard = xbmc.Keyboard()
-        pass_keyboard.setHeading(__language__(30002))
-        pass_keyboard.setHiddenInput(True)
-        pass_keyboard.doModal()
-        if (pass_keyboard.isConfirmed()):
-            USERPASS = pass_keyboard.getText()
-            __settings__.setSetting('username', USERNAME)
-            __settings__.setSetting('password', USERPASS)
-            return True
-        else:
-            return False
-    else:
-        return False
-
-
-if os.path.isfile(authUrlFile):
-    f = open(authUrlFile, "r")
-    LOGIN_URL = f.read()
-    f.close()
 
 api = None
 try:
@@ -320,6 +324,7 @@ if api and api.vkcookie:
         xbmcplugin.setPluginCategory(handle, PLUGIN_NAME)
         xbmcplugin.endOfDirectory(handle)
     elif sys.argv[2][:2]=="?L":
+        xbmc.output("http://vkontakte.ru/video"+ sys.argv[2][2:])
         vf = api.getVideoFile("http://vkontakte.ru/video"  + sys.argv[2][2:])
         if vf:
             for a in vf:
