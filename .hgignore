@@ -1,2 +1,3 @@
-.pyo$
-.bak$
+\.pyo$
+\.bak$
+\.DS_Store
