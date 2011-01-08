@@ -12,8 +12,12 @@
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary>Видео с сайта http://vkontakte.ru/</summary>
-    <description>Видео с сайта http://vkontakte.ru/
+    <summary lang="en">Video from VKontakte social network http://vkontakte.ru/</summary>
+    <description lang="en">Video from VKontakte social network http://vkontakte.ru/
+    homepage - code.svoka.com/vk-xbmc-plugin
+    Author - Vlad Svoka aka Shchvova</description>
+    <summary lang="ru">Видео с сайта http://vkontakte.ru/</summary>
+    <description lang="ru">Видео с сайта http://vkontakte.ru/
     Домашняя страница проекта - code.svoka.com/vk-xbmc-plugin
     Автор - Влад Свока aka Shchvova</description>
     <platform>all</platform>
