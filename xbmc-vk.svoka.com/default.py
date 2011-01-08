@@ -26,8 +26,6 @@ HOME, SEARCH, SEARCH_HISTORY, SEARCH_RESULT = "HOME,SEARCH,SEARCH_HISTORY,SEARCH
 
 class XBMCVkUI:
     def __init__(self, parameters):
-        xbmc.output(repr(sys.argv))
-        xbmc.output(repr(parameters))
         self.params = parameters
         self.Populate(getattr(self, "Do_" + self.params["mode"], self.Do_HOME))
 

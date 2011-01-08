@@ -105,7 +105,7 @@ class XBMCVkAppCreator:
                                       __settings__.getSetting('password'))
             except Exception:
                 self.cookie = None
-                if not self.askLogin():
+                if not self._askLogin():
                     return ""
         return self.cookie
 
