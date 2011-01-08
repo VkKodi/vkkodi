@@ -2,5 +2,5 @@
 <settings>
 	<setting id="username" type="text" label="30001" default=""  />
 	<setting id="password" type="text" label="30002" default=""   option="hidden" />
-    <setting id="history"  type="enum" label="30006" default="20" values="5|10|15|20|25|30|40|50|75|100"/>
+    <setting id="history"  type="enum" label="30006" default="3" values="5|10|15|20|25|30|40|50|75|100"/>
 </settings>
