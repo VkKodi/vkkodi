@@ -1,3 +1,10 @@
 \.pyo$
 \.bak$
 \.DS_Store
+
+.idea
+
+^script
+^packages
+^plugin
+^repository
