@@ -20,8 +20,6 @@ from xml.sax.saxutils import unescape
 class XVKImage(XBMCVkUI_Base):
 
     def Do_HOME(self):
-        self.api.call("photos.getAlbums")
-        xbmc.output("HOME")
         for title, title2, thumb, id, owner in self.GetAlbums():
             listItem = xbmcgui.ListItem(title, title2, thumb, thumb, ) #search history
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM, album=id, user=owner) , listItem, True)
@@ -29,7 +27,6 @@ class XVKImage(XBMCVkUI_Base):
 
             
     def Do_ALBUM(self):
-        xbmc.output("HERE")
         album = self.api.call("photos.get", uid = self.params["user"], aid = self.params["album"])
         photos = []
         for cameo in album:

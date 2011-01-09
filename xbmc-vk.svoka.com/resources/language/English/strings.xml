@@ -4,7 +4,9 @@
         <string id="30002">Password</string>
         <string id="30003">Search video</string>
         <string id="30004">If browser didn't show up, open</string>
-        <string id="30005">-- new VKontakte video search --</string>
+        <string id="30005">-- New VKontakte video search --</string>
         <string id="30006">Max history depth</string>
         <string id="30007">Search history</string>
+        <string id="30008">-- New VKontakte audio search --</string>
+        <string id="30009">My music</string>
 </strings>

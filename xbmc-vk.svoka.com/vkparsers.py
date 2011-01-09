@@ -15,7 +15,10 @@ except ImportError:
 
 def GetVideoFiles(url):
     html = urllib.urlopen(url).read()
-    jsonStr = re.findall(r"loadFlashPlayer\((.*?}),", html)[0]
+    player = re.findall(r"loadFlashPlayer\((.*?}),", html)
+    if not player:
+        return ["/unable to play " + url]
+    jsonStr = player[0]
     prs = json.loads(jsonStr)
 
     urlStart = prs["host"] + "u" + str(prs["uid"]) + "/video/" + str(prs["vtag"])
