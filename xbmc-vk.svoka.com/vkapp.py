@@ -25,13 +25,12 @@ __language__ = __settings__.getLocalizedString
 
 
 APP_ID = "2054573"
-USER_AUTH_URL  = "http://j.mp/vk-xbmc"
-
-
+USER_AUTH_URL  = "http://j.mp/vk-xbmc-media"
 authUrlFile = os.path.join(xbmc.translatePath('special://temp/'), 'vk-auth-url.sess')
-USER_AUTH_URL  = "http://j.mp/vk-xbmc"
 
 
+
+from vkapicaller import ApiFromURL
 
 class XBMCVkAppCreator:
     def __init__(self):
@@ -46,14 +45,7 @@ class XBMCVkAppCreator:
         loginSuccessUrl = self._AuthVKApp()
         if not loginSuccessUrl:
             raise Exception("Error, could not authorize application")
-
-        decoded=urllib.unquote(loginSuccessUrl)
-        start = decoded.find("{")
-        obj = json.loads(decoded[start:])
-        sid = obj["sid"]
-        mid = obj["mid"]
-        secret = obj["secret"]
-        self.VkInstance = VkApp(APP_ID, sid, mid, secret)
+        self.VkInstance = ApiFromURL(APP_ID, loginSuccessUrl)
         return self.VkInstance
 
 
@@ -64,7 +56,7 @@ class XBMCVkAppCreator:
             f.close()
             return ret
 
-        authUrl = "http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=16" % APP_ID
+        authUrl = "http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=28" % APP_ID
         if showBrowser:
             if xbmc.getCondVisibility( "system.platform.windows" ):
                 os.system('start %s'% USER_AUTH_URL) #Windows su^W can't hadle full url
@@ -134,44 +126,6 @@ class XBMCVkAppCreator:
 
 
 
-# http://vkontakte.ru/login.php?app=2054573&layout=popup&type=browser&settings=16
-class VkApp:
-    def __init__(self, api_id, sid, mid, secret):
-        #param is API call parameters
-        self.param = dict()
-        self.param["v"] = "3.0"
-        self.param["format"] = "JSON"
-        self.param["api_id"] = api_id
-        self.param["sid"] = sid
-        self.mid = str(mid)
-        self.secret = str(secret)
-
-    def call(self, api, **vars):
-        v = {"method" : api}
-        v.update(self.param)
-        v.update(vars)
-
-        keys= sorted(v.keys())
-
-        toCheck = "".join(["%s=%s" % (str(key), str(v[key])) for key in keys if key!="sid"])
-
-        toCheck = self.mid + toCheck + self.secret
-
-        v["sig"]=md5(toCheck).hexdigest()
-
-        request = "&".join(["%s=%s" % (str(key), urllib.quote(str(v[key]))) for key in v.keys()])
-        request_url = "http://vkontakte.ru/api.php?"+request
-
-        reply = urllib.urlopen(request_url)
-        #replystr = reply.read()
-        #resp = json.loads(replystr)
-        resp = json.load(reply)
-        if "error" in resp:
-            raise Exception("Error, error", resp)
-        else:
-            return resp["response"]
-
-        
 
 
 appManager = XBMCVkAppCreator()

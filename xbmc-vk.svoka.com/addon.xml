@@ -7,9 +7,9 @@
     <import addon="xbmc.python" version="1.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource"
-             provides="video"
+             provides="image, video, audio"
              library="default.py">
-    <provides>video</provides>
+    <provides>image video audio</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Video from VKontakte social network http://vkontakte.ru/</summary>
