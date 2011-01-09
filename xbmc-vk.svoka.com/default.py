@@ -10,6 +10,7 @@ import sys, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
 from vkapp import GetApi
 
 from xbmcvkui import XBMCVkUI_Base,HOME
+from xvaudio import XVKAudio
 from xvimage import XVKImage
 from xvvideo import XVKVideo
 
@@ -25,7 +26,7 @@ class XBMC_VK_UI_Factory:
         if id in (10006,10024,10025,10028):
             return XVKVideo(param, handle, api)
         elif id in (10005,10500,10501,10502):
-            return XBMCVkUI_Base(param, handle, api)
+            return XVKAudio(param, handle, api)
         elif id in (10002,):
             return XVKImage(param, handle, api)
         else:
