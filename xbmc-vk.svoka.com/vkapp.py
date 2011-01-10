@@ -95,7 +95,7 @@ class XBMCVkAppCreator:
 
         if not ret.startswith("http://vkontakte.ru/api/login_success"):
             #try again with browser, app is not authorized
-            return self.AuthVKApp(True)
+            return self._AuthVKApp(True)
 
         fl = open(authUrlFile, "w")
         fl.write(ret)
