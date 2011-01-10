@@ -32,7 +32,7 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         if res and res[0]:
             return res[1:]
         else:
-            return None
+            return []
 
     def ProcessFoundEntry(self, a):
         self.AddAudioEntry(a)
