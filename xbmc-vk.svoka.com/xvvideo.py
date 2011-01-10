@@ -4,14 +4,12 @@
 # Please leave my copyrights here cause as you can notice
 # "Copyright" always means "absolutely right copying".
 # Illegal copying of this code prohibited by real patsan's law!
-
-import re
-import urllib
-from xml.sax.saxutils import unescape
-
 __author__ = 'vova'
 
-import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os
+import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os, urllib, re
+from xml.sax.saxutils import unescape
+
+from xml.dom import minidom
 
 from vkparsers import GetVideoFiles
 from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH
@@ -21,7 +19,7 @@ __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
 __language__ = __settings__.getLocalizedString
 
 
-SEARCH_RESULT, TOP_DOWNLOADS, SERIES, MY_VIDEOS = "SEARCH_RESULT,TOP_DOWNLOADS,SERIES,MY_VIDEOS".split(',')
+SEARCH_RESULT, TOP_DOWNLOADS, SERIES, MY_VIDEOS, SEASONS, SEASON_SERIES = "SEARCH_RESULT,TOP_DOWNLOADS,SERIES,MY_VIDEOS,SEASONS,SEASON_SERIES".split(',')
 
 class XVKVideo(XBMCVkUI_VKSearch_Base):
     def __init__(self, *params):
@@ -62,7 +60,43 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_VIDEOS) , listItem, True)
 
     def Do_SERIES(self):
-        pass
+        html = urllib.urlopen("http://kinobaza.tv/series").read()
+        r = re.compile(r'<img width="207" src="(.*?)" alt="(.*?)" class="poster-pic" />.*?<a href="http://kinobaza.tv/film/(.*?)/.*?span class="english">(.*?)</span>', re.DOTALL)
+        res = r.findall(html)
+        for thumb, ru, id, en in res:
+            listItem = xbmcgui.ListItem(ru, en, thumb, thumb)
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASONS,id=id, thumb=thumb), listItem, True)
+
+    def Do_SEASONS(self):
+        srl = minidom.parse(urllib.urlopen("http://kinobaza.tv/film/%s?format=xml" % self.params["id"]))
+        n = 1
+        for e in srl.getElementsByTagName("season"):
+            episodes = len(e.getElementsByTagName("episode"))
+            thumb = self.params["thumb"]
+            listItem = xbmcgui.ListItem(__language__(30014) % (n,episodes), "", thumb, thumb)
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASON_SERIES, thumb=thumb,
+                                                                 id = self.params["id"], season = n), listItem, True)
+            n += 1
+
+    def Do_SEASON_SERIES(self):
+        srl = minidom.parse(urllib.urlopen("http://kinobaza.tv/film/%s?format=xml" % self.params["id"]))
+        film = srl.getElementsByTagName("film")[0]
+        season = srl.getElementsByTagName("season")[int(self.params["season"])-1]
+        season_num = season.attributes["number"].value
+        for e in season.getElementsByTagName("episode"):
+            if not(e.attributes["description"].value or e.attributes["name"].value or e.attributes["original_name"].value):
+                continue
+            n = e.attributes["number"].value
+            thumb = self.params["thumb"]
+            title = e.attributes["name"].value or e.attributes["original_name"].value
+            desc = e.attributes["description"].value
+            title = __language__(30015) % n + (title and (u": " + title))
+            listItem =  xbmcgui.ListItem(title, desc, thumb, thumb)
+            q = u"%s season %s episode %s" % (film.attributes["original_name"].value,season_num, n)
+            #UNICODE SUXX
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=q), listItem, True)
+
+
 
     def Do_MY_VIDEOS(self):
         v = self.api.call("video.get")
@@ -76,6 +110,9 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         regex = re.compile(r'<img width="60" src="(.*?)" alt="(.*?)" class="poster-pic" />.*?<span class="english">(.*?)</span>',re.UNICODE|re.DOTALL)
         r = regex.findall(html)
         for thumb, ru, en in r:
+            #UNICODE SUXX
+            #name should be = ru + " / " + en
+            #q=ru + " " + en.replace("(","").replace(")","")
             listItem = xbmcgui.ListItem(ru, en, thumb, thumb)
             q = ru
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH,query=q), listItem, True)
