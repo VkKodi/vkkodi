@@ -26,6 +26,7 @@ class XBMCVkUI_Base:
         pass
 
     def GetURL(self, __dict_params=dict(), **parameters):
+        #UNOCODE things here???
         __dict_params.update(parameters)
         return sys.argv[0] + "?" + urllib.urlencode(__dict_params)
 

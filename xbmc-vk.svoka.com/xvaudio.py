@@ -1,10 +1,11 @@
+import urllib
 from xml.sax.saxutils import unescape
 
 __author__ = 'vova'
 
 import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os
 
-from xbmcvkui import XBMCVkUI_VKSearch_Base,HOME
+from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH
 import datetime
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
@@ -12,7 +13,9 @@ __language__ = __settings__.getLocalizedString
 saved_search_file = os.path.join(xbmc.translatePath('special://temp/'), 'vk-search.sess')
 
 #modes
-ALBUM,MY_MUSIC = "ALBUM,MY_MUSIC".split(',')
+ALBUM,MY_MUSIC,HYPED_ARTISTS = "ALBUM,MY_MUSIC,HYPED_ARTISTS".split(',')
+
+from xml.dom import minidom
 
 class XVKAudio(XBMCVkUI_VKSearch_Base):
     def __init__(self, *params):
@@ -25,7 +28,23 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         XBMCVkUI_VKSearch_Base.Do_HOME(self)
         listItem = xbmcgui.ListItem(__language__(30009))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_MUSIC) , listItem, True)
+        listItem = xbmcgui.ListItem(__language__(30016))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=HYPED_ARTISTS) , listItem, True)
 
+    def Do_HYPED_ARTISTS(self):
+        srl = minidom.parse(urllib.urlopen("http://ws.audioscrobbler.com/2.0/?method=chart.gethypedartists&api_key=42db3eb160b603b55f8886e8c4e9a8f4"))
+        artists = srl.getElementsByTagName("artist")
+        for a in artists:
+            thumb =""
+            thumbNode =  a.getElementsByTagName("image")[2].childNodes
+            if thumbNode:
+                thumb = thumbNode[0].nodeValue
+            name  =  a.getElementsByTagName("name") [0].childNodes[0].nodeValue
+            #UNICODE SUXX
+            u"".encode()
+            name = unicode(name.encode("utf-8","ignore"),errors="ignore")
+            listItem = xbmcgui.ListItem(name, "", thumb, thumb)
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=name, thumb=thumb) , listItem, True)
 
 
     def transformResult(self,res):
