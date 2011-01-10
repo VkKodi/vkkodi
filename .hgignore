@@ -3,6 +3,8 @@
 \.bak$
 \.DS_Store
 
+xbmc-vk.svoka.com/gpl.txt
+
 .idea
 
 ^script
