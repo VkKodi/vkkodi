@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-	<addon id="xbmc-vk.svoka.com" name="VK-xbmc" version="0.3" provider-name="shchvova">
+	<addon id="xbmc-vk.svoka.com" name="VK-xbmc" version="0.2" provider-name="shchvova">
 		<requires>
 			<import addon="xbmc.python" version="1.0"/>
 		</requires>
 		<extension point="xbmc.python.pluginsource" provides="image, video, audio" library="default.py">
 			<provides>image video audio</provides>
-		</extension>
-		<extension point="xbmc.addon.repository" name="VK-xbmc">
-			<info compressed="false">http://code.svoka.com/vk-xbmc-plugin/raw/tip/addons.xml</info>
-			<datadir zip="false">http://code.svoka.com/vk-xbmc-plugin/raw/tip/</datadir>
 		</extension>
 		<extension point="xbmc.addon.metadata">
 			<summary lang="en">Video from VKontakte social network http://vkontakte.ru/</summary>
