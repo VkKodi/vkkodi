@@ -11,5 +11,6 @@ xbmc-vk.svoka.com/gpl.txt
 ^packages
 ^plugin
 ^repository
+^metadata
 
 test.py$
