@@ -31,8 +31,6 @@ saved_search_file = os.path.join(xbmc.translatePath('special://temp/'), 'vk-sear
 ALBUM = "ALBUM"
 
 
-from xml.sax.saxutils import unescape
-
 
 
 class XVKImage(XBMCVkUI_Base):
