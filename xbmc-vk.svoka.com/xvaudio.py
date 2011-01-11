@@ -20,11 +20,13 @@ __author__ = 'Volodymyr Shcherban'
 import urllib
 from xml.sax.saxutils import unescape
 
+
+
 __author__ = 'vova'
 
 import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os
 
-from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH
+from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH, PrepareString
 import datetime
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
@@ -59,9 +61,7 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
             if thumbNode:
                 thumb = thumbNode[0].nodeValue
             name  =  a.getElementsByTagName("name") [0].childNodes[0].nodeValue
-            #UNICODE SUXX
-            u"".encode()
-            name = unicode(name.encode("utf-8","ignore"),errors="ignore")
+            name = name.encode('utf-8')
             listItem = xbmcgui.ListItem(name, "", thumb, thumb)
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=name, thumb=thumb) , listItem, True)
 
@@ -89,5 +89,5 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         title += a.get("title")
         d = unicode(datetime.timedelta(seconds=int(a["duration"])))
         title = d + u" - " + title
-        listItem = xbmcgui.ListItem(title)
+        listItem = xbmcgui.ListItem(PrepareString(title) )
         xbmcplugin.addDirectoryItem(self.handle, a["url"] , listItem, False)
