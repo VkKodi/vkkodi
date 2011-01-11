@@ -114,6 +114,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
         if not query:
             return
         max = int(__settings__.getSetting('history'))
+        max = [5, 10, 15, 20, 25, 30, 40, 50, 75, 100][max]
         lines = []
         if os.path.isfile(saved_search_file % searchId):
             fl = open(saved_search_file % searchId,"r")
