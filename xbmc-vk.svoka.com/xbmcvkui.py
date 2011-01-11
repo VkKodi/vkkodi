@@ -124,14 +124,25 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
 
 
 class XBMCVkUI_VKSearch_Base(XBMCVkUI_Search_Base):
+    def __init__(self, *params):
+        self.searchTweaks = {"count" : "50"}
+        XBMCVkUI_Search_Base.__init__(self, *params)
+
+
     def Search(self,query):
         result = None
         if query:
             self.AddSearchHistory(query, self.histId)
-            result = self.transformResult(self.api.call(self.apiName,q=query, count="10"))
+            self.searchTweaks["q"]=query
+            self.DoSearchTweaks()
+            result = self.api.call(self.apiName, **self.searchTweaks)
+            result = self.transformResult(result)
         if result:
             for a in result:
                 self.ProcessFoundEntry(a)
 
     def transformResult(self, res):
         return res
+    
+    def DoSearchTweaks(self):
+        pass

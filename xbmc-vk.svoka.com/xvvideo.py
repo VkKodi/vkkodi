@@ -39,6 +39,12 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         self.apiName = "video.search"
         self.locale = {"newSearch":__language__(30005), "history": __language__(30007), "input":__language__(30003)}
         XBMCVkUI_VKSearch_Base.__init__(self, *params)
+    
+    def DoSearchTweaks(self):
+        if __settings__.getSetting('hdOnly') == 'true':
+            self.searchTweaks["hd"] = "1"
+        if __settings__.getSetting('sortLen') == 'true':
+            self.searchTweaks["sort"] = "1"
 
     def ProcessFoundEntry(self, a):
         duration = str(datetime.timedelta(seconds=int(a["duration"])))
