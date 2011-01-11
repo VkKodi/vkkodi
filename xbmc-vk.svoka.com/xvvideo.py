@@ -19,7 +19,6 @@ __author__ = 'Volodymyr Shcherban'
 
 
 import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os, urllib, re, sys
-from xml.sax.saxutils import unescape
 
 from xml.dom import minidom
 
@@ -48,10 +47,10 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
 
     def ProcessFoundEntry(self, a):
         duration = str(datetime.timedelta(seconds=int(a["duration"])))
-        title =   duration + " - " + unescape(a["title"], {"&apos;": "'", "&quot;": '"'})
+        title =   duration + " - " + PrepareString(a["title"])
         videos = str(a["owner_id"])+"_"+str(a.get("id") or a.get("vid"))
         thumb = a.get("thumb") or a.get("image")
-        listItem = xbmcgui.ListItem(PrepareString(title), a["description"], thumb, thumb)
+        listItem = xbmcgui.ListItem(title, a["description"], thumb, thumb)
         listItem.setInfo(type = "Video", infoLabels = {
             "title"     : title
             ,"duration" : duration

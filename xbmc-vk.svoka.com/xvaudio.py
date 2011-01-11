@@ -18,7 +18,6 @@
 __author__ = 'Volodymyr Shcherban'
 
 import urllib
-from xml.sax.saxutils import unescape
 
 
 
