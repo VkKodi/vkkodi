@@ -128,9 +128,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         regex = re.compile(r'<img width="60" src="(.*?)" alt="(.*?)" class="poster-pic" />.*?<span class="english">(.*?)</span>',re.UNICODE|re.DOTALL)
         r = regex.findall(html)
         for thumb, ru, en in r:
-            #UNICODE SUXX
-            #name should be = ru + " / " + en
-            #q=ru + " " + en.replace("(","").replace(")","")
-            listItem = xbmcgui.ListItem(ru, en, thumb, thumb)
-            q = ru
+            title = ru.decode("utf-8") + " / " + en.decode('utf-8')
+            listItem = xbmcgui.ListItem(title, en, thumb, thumb)
+            q=ru + " " + en.replace("(","").replace(")","")
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH,query=q), listItem, True)
