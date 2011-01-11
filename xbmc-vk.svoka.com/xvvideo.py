@@ -18,13 +18,13 @@
 __author__ = 'Volodymyr Shcherban'
 
 
-import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os, urllib, re
+import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os, urllib, re, sys
 from xml.sax.saxutils import unescape
 
 from xml.dom import minidom
 
 from vkparsers import GetVideoFiles
-from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH
+from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH, PrepareString
 
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
@@ -51,7 +51,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         title =   duration + " - " + unescape(a["title"], {"&apos;": "'", "&quot;": '"'})
         videos = str(a["owner_id"])+"_"+str(a.get("id") or a.get("vid"))
         thumb = a.get("thumb") or a.get("image")
-        listItem = xbmcgui.ListItem(title, a["description"], thumb, thumb)
+        listItem = xbmcgui.ListItem(PrepareString(title), a["description"], thumb, thumb)
         listItem.setInfo(type = "Video", infoLabels = {
             "title"     : title
             ,"duration" : duration
@@ -82,7 +82,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         r = re.compile(r'<img width="207" src="(.*?)" alt="(.*?)" class="poster-pic" />.*?<a href="http://kinobaza.tv/film/(.*?)/.*?span class="english">(.*?)</span>', re.DOTALL)
         res = r.findall(html)
         for thumb, ru, id, en in res:
-            listItem = xbmcgui.ListItem(ru, en, thumb, thumb)
+            listItem = xbmcgui.ListItem(PrepareString(ru), en, thumb, thumb)
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASONS,id=id, thumb=thumb), listItem, True)
 
     def Do_SEASONS(self):
@@ -109,9 +109,9 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             title = e.attributes["name"].value or e.attributes["original_name"].value
             desc = e.attributes["description"].value
             title = __language__(30015) % n + (title and (u": " + title))
-            listItem =  xbmcgui.ListItem(title, desc, thumb, thumb)
-            q = u"%s season %s episode %s" % (film.attributes["original_name"].value,season_num, n)
-            #UNICODE SUXX
+            listItem =  xbmcgui.ListItem(PrepareString(title), desc, thumb, thumb)
+            q = "%s  %s   %s" % (film.attributes["name"].value,season_num, n)
+            q = q.encode('utf-8')
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=q), listItem, True)
 
 
@@ -129,6 +129,8 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         r = regex.findall(html)
         for thumb, ru, en in r:
             title = ru.decode("utf-8") + " / " + en.decode('utf-8')
-            listItem = xbmcgui.ListItem(title, en, thumb, thumb)
-            q=ru + " " + en.replace("(","").replace(")","")
+            listItem = xbmcgui.ListItem(PrepareString(title) , en, thumb, thumb)
+            q= ru + " " + en.replace("(","").replace(")","")
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH,query=q), listItem, True)
+
+

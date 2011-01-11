@@ -20,7 +20,7 @@ __author__ = 'Volodymyr Shcherban'
 
 import xbmcgui, xbmc, xbmcplugin, xbmcaddon, datetime, os
 
-from xbmcvkui import XBMCVkUI_Base,HOME
+from xbmcvkui import XBMCVkUI_Base,HOME, PrepareString
 from datetime import datetime
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
@@ -53,7 +53,7 @@ class XVKImage(XBMCVkUI_Base):
                 title = cameo["text"] + u" (" + unicode(str(datetime.fromtimestamp(int(cameo["created"])))) + u")"
             else:
                 title =  unicode(str(datetime.fromtimestamp(int(cameo["created"]))))
-            title = unescape(title, {"&apos;": "'", "&quot;": '"'})
+            title = PrepareString(title)
             e = ( title,
                   cameo.get("src_xxbig") or cameo.get("src_xbig") or cameo.get("src_big") or cameo["src"],
                   cameo["src"] )

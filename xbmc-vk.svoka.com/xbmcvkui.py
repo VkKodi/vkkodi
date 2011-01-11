@@ -15,6 +15,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from xml.sax.saxutils import unescape
+
 __author__ = 'Volodymyr Shcherban'
 
 import xbmcplugin, urllib, sys, os
@@ -22,6 +24,11 @@ import xbmcplugin, urllib, sys, os
 PLUGIN_NAME = 'VK-xbmc'
 
 HOME = 'HOME'
+
+
+def PrepareString(str):
+    return unescape(str, {"&apos;": "'", "&#039;" : "'", "&#39;" : "'", "&quot;": '"'})
+
 
 class XBMCVkUI_Base:
     def __init__(self, parameters, handle, api):
@@ -125,7 +132,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
 
 class XBMCVkUI_VKSearch_Base(XBMCVkUI_Search_Base):
     def __init__(self, *params):
-        self.searchTweaks = {"count" : "50"}
+        self.searchTweaks = {"count" : "25"}
         XBMCVkUI_Search_Base.__init__(self, *params)
 
 
