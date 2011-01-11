@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="xbmc-vk.svoka.com" name="VK-xbmc" version="0.4" provider-name="shchvova">
+	<requires>
+		<import addon="xbmc.python" version="1.0"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" provides="image, video, audio" library="default.py">
+		<provides>image video audio</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Video, audio and photos from VKontakte social network http://vkontakte.ru/</summary>
+		<description lang="en">Video from VKontakte social network http://vkontakte.ru/
+homepage - http://code.svoka.com/vk-xbmc-plugin
+Author - Vlad Svoka aka Shchvova</description>
+		<summary lang="ru">Видео с сайта http://vkontakte.ru/</summary>
+		<description lang="ru">Видео, аудио и фотографии с сайта http://vkontakte.ru/
+Домашняя страница проекта - http://code.svoka.com/vk-xbmc-plugin
+Автор - Влад Свока aka Shchvova</description>
+		<platform>all</platform>
+	</extension>
+</addon>
