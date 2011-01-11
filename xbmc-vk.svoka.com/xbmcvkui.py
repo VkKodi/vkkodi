@@ -95,7 +95,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
         history = self.GetSearchHistory(self.histId)
         if history:
             for q in history:
-                listItem = xbmcgui.ListItem(q)
+                listItem = xbmcgui.ListItem(PrepareString(q))
                 xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH,query=q), listItem, True)
 
 
