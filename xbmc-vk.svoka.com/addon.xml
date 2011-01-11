@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="xbmc-vk.svoka.com"
-       name="VK-xbmc"
-       version="0.2.1"
-       provider-name="shchvova">
-  <requires>
-    <import addon="xbmc.python" version="1.0"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource"
-             provides="image, video, audio"
-             library="default.py">
-    <provides>image video audio</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">Video from VKontakte social network http://vkontakte.ru/</summary>
-    <description lang="en">Video from VKontakte social network http://vkontakte.ru/
+<addon id="xbmc-vk.svoka.com" name="VK-xbmc" version="0.3" provider-name="shchvova">
+	<requires>
+		<import addon="xbmc.python" version="1.0"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" provides="image, video, audio" library="default.py">
+		<provides>image video audio</provides>
+	</extension>
+	<extension point="xbmc.addon.repository" name="VK-XBMC repository">
+		<info compressed="false">http://code.svoka.com/vk-xbmc-plugin/raw/tip/xbmc-vk.svoka.com/addon.xml</info>
+		<datadir zip="false">http://code.svoka.com/vk-xbmc-plugin/raw/tip/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Video from VKontakte social network http://vkontakte.ru/</summary>
+		<description lang="en">Video from VKontakte social network http://vkontakte.ru/
     homepage - code.svoka.com/vk-xbmc-plugin
     Author - Vlad Svoka aka Shchvova</description>
-    <summary lang="ru">Видео с сайта http://vkontakte.ru/</summary>
-    <description lang="ru">Видео с сайта http://vkontakte.ru/
+		<summary lang="ru">Видео с сайта http://vkontakte.ru/</summary>
+		<description lang="ru">Видео с сайта http://vkontakte.ru/
     Домашняя страница проекта - code.svoka.com/vk-xbmc-plugin
     Автор - Влад Свока aka Shchvova</description>
-    <platform>all</platform>
-  </extension>
+		<platform>all</platform>
+	</extension>
 </addon>
