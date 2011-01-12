@@ -70,7 +70,7 @@ class VkApp:
         #resp = json.loads(replystr)
         resp = json.load(reply)
         if "error" in resp:
-            raise Exception("Error, error", resp)
+            raise Exception("Error, error! DATA: " + str(resp))
         else:
             return resp["response"]
 
