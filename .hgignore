@@ -1,0 +1,16 @@
+\.pyo$
+\.pyc$
+\.bak$
+\.DS_Store
+
+xbmc-vk.svoka.com/gpl.txt
+
+.idea
+
+^script
+^packages
+^plugin
+^repository
+^metadata
+
+test.py$

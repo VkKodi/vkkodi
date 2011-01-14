@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+        <string id="30001">VKontakte email</string>
+        <string id="30002">Password</string>
+        <string id="30003">Search video</string>
+        <string id="30004">If browser didn't show up, open</string>
+        <string id="30005">-- New VKontakte video search --</string>
+        <string id="30006">Max history depth</string>
+        <string id="30007">Search history</string>
+        <string id="30008">-- New VKontakte audio search --</string>
+        <string id="30009">My music</string>
+        <string id="30010">Top grossing movies</string>
+        <string id="30011">TV Shows</string>
+        <string id="30012">My videos</string>
+        <string id="30013">All Hail Shchvova</string>
+        <string id="30014">Season %d - %d episode(s)</string>
+        <string id="30015">Episode %s</string>
+        <string id="30016">Hyped artists</string>
+        <string id="30017">Only HD videos</string>
+        <string id="30018">Sort videos by length</string>
+</strings>
