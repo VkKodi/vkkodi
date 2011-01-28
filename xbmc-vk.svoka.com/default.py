@@ -19,11 +19,11 @@ __author__ = 'Volodymyr Shcherban'
 
 
 
-import sys, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
+import sys, os, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
 
-from vkapp import GetApi
+from vkapp import GetApi, authUrlFile
 
-from xbmcvkui import XBMCVkUI_Base,HOME
+from xbmcvkui import HOME
 from xvaudio import XVKAudio
 from xvimage import XVKImage
 from xvvideo import XVKVideo
@@ -57,9 +57,10 @@ def Main():
 		ui = XBMC_VK_UI_Factory().GetUI(params,globApi, globHandle)
 		
 	else:
-		listitem = xbmcgui.ListItem("-- something wrong, try again --")
-		xbmcplugin.addDirectoryItem(handle, sys.argv[0], listitem, True)
+		listItem = xbmcgui.ListItem("-- something wrong, try again --")
+		xbmcplugin.addDirectoryItem(handle, sys.argv[0], listItem, True)
 		xbmc.output("THIS IS THE END")
+        raise Exception("Api is null")
 
 try:
 	Main()
@@ -67,4 +68,3 @@ except Exception, e:
 	xbmc.output("CAUGHT ERROR" + str(e))
 	if os.path.isfile(authUrlFile):
 		os.remove(authUrlFile)
-	return None
