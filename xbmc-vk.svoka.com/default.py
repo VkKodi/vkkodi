@@ -43,28 +43,29 @@ class XBMC_VK_UI_Factory:
         else:
             print "Invalid context: " + id
 
-			
-def Main():
-	globHandle = int(sys.argv[1])			
-	globApi = GetApi()
-	if globApi:
-		params = {"mode" : HOME}
-		if sys.argv[2]:
-			l = [s.split("=") for s in sys.argv[2][1:].split("&")]
-			l = map(lambda e: (e[0], urllib.unquote_plus(e[1])) , l)
-			params.update(dict(l))
 
-		ui = XBMC_VK_UI_Factory().GetUI(params,globApi, globHandle)
-		
-	else:
-		listItem = xbmcgui.ListItem("-- something wrong, try again --")
-		xbmcplugin.addDirectoryItem(handle, sys.argv[0], listItem, True)
-		xbmc.output("THIS IS THE END")
+def Main():
+    globHandle = int(sys.argv[1])
+    globApi = GetApi()
+    if globApi:
+        params = {"mode" : HOME}
+        if sys.argv[2]:
+            l = [s.split("=") for s in sys.argv[2][1:].split("&")]
+            l = map(lambda e: (e[0], urllib.unquote_plus(e[1])) , l)
+            params.update(dict(l))
+
+        ui = XBMC_VK_UI_Factory().GetUI(params,globApi, globHandle)
+
+    else:
+        listItem = xbmcgui.ListItem("-- something wrong, try again --")
+        xbmcplugin.addDirectoryItem(handle, sys.argv[0], listItem, True)
+        xbmc.output("THIS IS THE END")
         raise Exception("Api is null")
 
 try:
-	Main()
+    Main()
 except Exception, e:
-	xbmc.output("CAUGHT ERROR" + str(e))
-	if os.path.isfile(authUrlFile):
-		os.remove(authUrlFile)
+    xbmc.output("CAUGHT ERROR" + str(e))
+    if os.path.isfile(authUrlFile):
+        os.remove(authUrlFile)
+    raise e
