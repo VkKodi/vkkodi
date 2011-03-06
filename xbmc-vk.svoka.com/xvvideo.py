@@ -31,6 +31,7 @@ __language__ = __settings__.getLocalizedString
 
 
 SEARCH_RESULT, TOP_DOWNLOADS, SERIES, MY_VIDEOS, SEASONS, SEASON_SERIES = "SEARCH_RESULT,TOP_DOWNLOADS,SERIES,MY_VIDEOS,SEASONS,SEASON_SERIES".split(',')
+MY_SHOWS_LIST = "MY_SHOWS_LIST"
 
 class XVKVideo(XBMCVkUI_VKSearch_Base):
     def __init__(self, *params):
@@ -40,8 +41,11 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         XBMCVkUI_VKSearch_Base.__init__(self, *params)
     
     def DoSearchTweaks(self):
-        if __settings__.getSetting('hdOnly') == 'true':
+        if __settings__.getSetting('hdOnly') == 'true' or "hd" in self.params:
             self.searchTweaks["hd"] = "1"
+        else:
+            listItem = xbmcgui.ListItem(__language__(30019))
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=self.params["query"], hd = "1") , listItem, True)
         if __settings__.getSetting('sortLen') == 'true':
             self.searchTweaks["sort"] = "1"
 
@@ -75,6 +79,8 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SERIES) , listItem, True)
         listItem = xbmcgui.ListItem(__language__(30012))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_VIDEOS) , listItem, True)
+#        listItem = xbmcgui.ListItem(__language__(30020))
+#        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_SHOWS_LIST) , listItem, True)
 
     def Do_SERIES(self):
         html = urllib.urlopen("http://kinobaza.tv/series").read()
@@ -133,3 +139,5 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH,query=q), listItem, True)
 
 
+    def Do_MY_SHOWS_LIST(self):
+        pass

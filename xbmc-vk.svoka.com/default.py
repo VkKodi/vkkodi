@@ -19,22 +19,19 @@ __author__ = 'Volodymyr Shcherban'
 
 
 
-import sys, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
+import sys, os, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
 
-from vkapp import GetApi
+from vkapp import GetApi, authUrlFile
 
-from xbmcvkui import XBMCVkUI_Base,HOME
+from xbmcvkui import HOME
 from xvaudio import XVKAudio
 from xvimage import XVKImage
 from xvvideo import XVKVideo
 
 
-handle = int(sys.argv[1])
-
-api = GetApi()
 
 class XBMC_VK_UI_Factory:
-    def GetUI(self, param):
+    def GetUI(self, param, api, handle):
         #bloody hacks http://wiki.xbmc.org/index.php?title=Window_IDs
         id = xbmcgui.getCurrentWindowId()
         if id in (10006,10024,10025,10028):
@@ -47,16 +44,28 @@ class XBMC_VK_UI_Factory:
             print "Invalid context: " + id
 
 
-if api:
-    params = {"mode" : HOME}
-    if sys.argv[2]:
-        l = [s.split("=") for s in sys.argv[2][1:].split("&")]
-        l = map(lambda e: (e[0], urllib.unquote_plus(e[1])) , l)
-        params.update(dict(l))
+def Main():
+    globHandle = int(sys.argv[1])
+    globApi = GetApi()
+    if globApi:
+        params = {"mode" : HOME}
+        if sys.argv[2]:
+            l = [s.split("=") for s in sys.argv[2][1:].split("&")]
+            l = map(lambda e: (e[0], urllib.unquote_plus(e[1])) , l)
+            params.update(dict(l))
 
-    ui = XBMC_VK_UI_Factory().GetUI(params)
-    
-else:
-    listitem = xbmcgui.ListItem("-- something wrong, try again --")
-    xbmcplugin.addDirectoryItem(handle, sys.argv[0], listitem, True)
-    xbmc.output("THIS IS THE END")
+        ui = XBMC_VK_UI_Factory().GetUI(params,globApi, globHandle)
+
+    else:
+        listItem = xbmcgui.ListItem("-- something wrong, try again --")
+        xbmcplugin.addDirectoryItem(handle, sys.argv[0], listItem, True)
+        xbmc.output("THIS IS THE END")
+        raise Exception("Api is null")
+
+try:
+    Main()
+except Exception, e:
+    xbmc.output("CAUGHT ERROR" + str(e))
+    if os.path.isfile(authUrlFile):
+        os.remove(authUrlFile)
+    raise e
