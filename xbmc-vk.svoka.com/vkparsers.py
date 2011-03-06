@@ -29,7 +29,18 @@ def GetVideoFiles(url):
     html = urllib.urlopen(url).read()
     player = re.findall(r"loadFlashPlayer\((.*?}),", html)
     if not player:
-        return ["/unable to play " + url]
+        player = re.findall(r"\\nvar vars =(.*?});", html)
+        if not player:
+            return ["/unable to play " + url]
+        else:
+            player[0] = player[0].replace('\\"','"')
+            tmp = ""
+            for a in player[0]:
+                if ord(a)< 128:
+                    tmp += a
+                else:
+                    tmp += urllib.quote(a)
+            player[0] = tmp
     jsonStr = player[0]
     prs = json.loads(jsonStr)
 
