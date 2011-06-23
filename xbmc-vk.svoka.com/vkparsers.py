@@ -33,14 +33,13 @@ def GetVideoFiles(url):
         if not player:
             return ["/unable to play " + url]
         else:
-            player[0] = player[0].replace('\\"','"')
             tmp = ""
             for a in player[0]:
                 if ord(a)< 128:
                     tmp += a
                 else:
                     tmp += urllib.quote(a)
-            player[0] = tmp
+            player[0] = filter(lambda x: x != "\\", tmp)
     jsonStr = player[0]
     prs = json.loads(jsonStr)
 
