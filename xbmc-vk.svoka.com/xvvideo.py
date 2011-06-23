@@ -45,7 +45,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             self.searchTweaks["hd"] = "1"
         else:
             listItem = xbmcgui.ListItem(__language__(30019))
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=self.params["query"], hd = "1") , listItem, True)
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=self.searchTweaks["q"], hd = "1") , listItem, True)
         if __settings__.getSetting('sortLen') == 'true':
             self.searchTweaks["sort"] = "1"
 

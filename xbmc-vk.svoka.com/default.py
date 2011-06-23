@@ -58,7 +58,7 @@ def Main():
 
     else:
         listItem = xbmcgui.ListItem("-- something wrong, try again --")
-        xbmcplugin.addDirectoryItem(handle, sys.argv[0], listItem, True)
+        xbmcplugin.addDirectoryItem(globHandle, sys.argv[0], listItem, True)
         xbmc.output("THIS IS THE END")
         raise Exception("Api is null")
 

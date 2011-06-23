@@ -88,6 +88,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
             kb.doModal()
             if kb.isConfirmed():
                 query = kb.getText()
+            self.params["query"] = query
         self.Search(query)
 
 
