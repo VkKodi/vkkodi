@@ -6,6 +6,13 @@
 	<extension point="xbmc.python.pluginsource" provides="image, video, audio" library="default.py">
 		<provides>image video audio</provides>
 	</extension>
+	
+	<extension point="xbmc.addon.repository" name="VK XBMC Add-ons">
+		<info compressed="false">http://xbmc-vk-repo.googlecode.com/svn/trunk/addons/addons.xml</info>
+		<checksum>http://xbmc-vk-repo.googlecode.com/svn/trunk/addons/addons.xml.md5</checksum>
+		<datadir zip="false">http://xbmc-vk-repo.googlecode.com/svn/trunk/addons/</datadir>
+	</extension>	
+		
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Video, audio and photos from VKontakte social network http://vkontakte.ru/</summary>
 		<description lang="en">Video from VKontakte social network http://vkontakte.ru/
