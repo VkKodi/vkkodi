@@ -63,7 +63,8 @@ if __name__== '__main__':
     import sys
     if len(sys.argv) > 1:
         try:
-            for s in GetVideoFiles(sys.argv[1]):
+            url = "http://vk.com/" + re.findall(r"(video[0-9]+[-_][0-9]+)",sys.argv[1])[0]
+            for s in GetVideoFiles(url):
                 print s
         except Exception, e:
             sys.stderr.writelines(["error: " + str(e) + "\n", "usage: vkparsers.py http://vk.com/video111_222\n"])
