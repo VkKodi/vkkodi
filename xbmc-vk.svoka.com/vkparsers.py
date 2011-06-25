@@ -59,4 +59,13 @@ def GetVideoFiles(url):
     videoURLs.reverse()
     return videoURLs
 
-
+if __name__== '__main__':
+    import sys
+    if len(sys.argv) > 1:
+        try:
+            for s in GetVideoFiles(sys.argv[1]):
+                print s
+        except Exception, e:
+            sys.stderr.writelines(["error: " + str(e) + "\n", "usage: vkparsers.py http://vk.com/video111_222\n"])
+    else:
+        print("usage: vkparsers.py http://vk.com/video111_222")
