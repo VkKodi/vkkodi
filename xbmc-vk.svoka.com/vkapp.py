@@ -68,7 +68,7 @@ class XBMCVkAppCreator:
             f.close()
             return ret
 
-        authUrl = "http://vkontakte.ru/login.php?app=%s&layout=popup&type=browser&settings=28" % APP_ID
+        authUrl = "http://vk.com/login.php?app=%s&layout=popup&type=browser&settings=28" % APP_ID
         if showBrowser:
             if xbmc.getCondVisibility( "system.platform.windows" ):
                 os.system('start %s'% USER_AUTH_URL) #Windows su^W can't hadle full url
@@ -85,15 +85,14 @@ class XBMCVkAppCreator:
 
         proc = urllib2.HTTPCookieProcessor()
         proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', self._initCookie(),
-                                   '80', False, 'vkontakte.ru', True, False, '/',
+                                   '80', False, 'vk.com', True, False, '/',
                                    True, False, None, False, None, None, None))
         opener = urllib2.build_opener(urllib2.HTTPHandler(), proc)
         opener.addheaders.append(('User-agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13'))
         opener.addheaders.append(('Referer', authUrl))
         ret = opener.open(authUrl).url
         opener.close()
-
-        if not ret.startswith("http://vkontakte.ru/api/login_success"):
+        if not ret.startswith("http://vk.com/api/login_success"):
             #try again with browser, app is not authorized
             return self._AuthVKApp(True)
 
