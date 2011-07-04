@@ -17,11 +17,38 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = 'Volodymyr Shcherban'
 
-import sys,urllib, urllib2, cookielib, re, xbmcaddon, string, xbmc, xbmcgui, xbmcplugin, os
+import sys,urllib, urllib2, cookielib, re,  string, xbmc #, xbmcaddon, xbmc, xbmcgui, xbmcplugin, os
 
 def GetCookie(mail,passw):
-    vkk = VkontakteCookie(mail, passw)
-    return vkk.get_cookie()
+    host = 'https://login.vk.com/'
+    post = urllib.urlencode({
+        'act':'login',
+    'q':'1',
+    'al_frame':'1',
+    'expire':'',
+    'captcha_sid':'',
+    'captcha_key':'',
+    'from_host':'vk.com',
+    'email':mail,
+    'pass': passw
+    })
+
+    headers = {
+    'Referer': 'http://vk.com/al_index.php?act=auth_frame',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.803.0 Safari/535.1',
+    'Content-Type': 'application/x-www-form-urlencoded',
+              }
+    conn = urllib2.Request(host, post, headers)
+    data = urllib2.urlopen(conn)
+    i = data.info()
+
+    #xbmc.output(str(i))
+    cookie = re.findall(r'remixsid=(.*?);', str(i))[0]
+    #xbmc.output("Cookie is " + cookie)
+    if not cookie or cookie == 'deleted':
+        raise Exception("Wrong login!")
+    #xbmc.output("koka " + cookie)
+    return cookie
 
 
 class VkontakteCookie:
@@ -32,18 +59,21 @@ class VkontakteCookie:
 
     def get_s_value(self):
         #Возвращает уникальный идентификатор, который выдается на домене login.vk.com
-        host = 'http://login.vk.com/?act=login'
+        host = 'http://login.vk.com/'
         post = urllib.urlencode({'email' : self.email,
                                  'expire' : '',
                                  'pass' : self.password,
-                                 'vk' : ''})
+                                 'q' : '1',
+                                'act' :'login', 'al_frame' : '1', 'captcha_sid' : '', 'captcha_key' : '',
+        'from_host':'vk.com'})
 
         headers = {'User-Agent' : 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13',
                    'Host' : 'login.vk.com',
-                   'Referer' : 'http://vkontakte.ru/index.php',
+                   'Referer' : 'http://vk.com/',
+                   'Origin' : 'http://vk.com/',
                    'Connection' : 'close',
                    'Pragma' : 'no-cache',
-                   'Cache-Control' : 'no-cache',
+                   'Cache-Control' : 'no-cache'
                   }
 
         conn = urllib2.Request(host, post, headers)
@@ -73,4 +103,6 @@ class VkontakteCookie:
         if not self.cookie:
             raise Exception('Wront login')
         return self.cookie
+
+
 
