@@ -101,7 +101,7 @@ class VkontakteCookie:
         cooke_str = re.sub(r'(expires=.*?;\s|path=\/;\s|domain=\.vkontakte\.ru(?:,\s)?)', '', cookie_src)
         self.cookie =  cooke_str.split("=")[-1].split(";")[0].strip()
         if not self.cookie:
-            raise Exception('Wront login')
+            raise Exception('Wrong login')
         return self.cookie
 
 
