@@ -27,28 +27,27 @@ except ImportError:
 
 def GetVideoFiles(url):
     html = urllib.urlopen(url).read()
-    player = re.findall(r"loadFlashPlayer\((.*?}),", html)
+
+    player = re.findall(r"\\nvar vars =(.*?});", html)
     if not player:
-        player = re.findall(r"\\nvar vars =(.*?});", html)
-        if not player:
-            return ["/unable to play " + url]
+        return ["/unable to play " + url]
+    tmp = ""
+    for a in player[0]:
+        if ord(a)< 128:
+            tmp += a
         else:
-            tmp = ""
-            for a in player[0]:
-                if ord(a)< 128:
-                    tmp += a
-                else:
-                    tmp += urllib.quote(a)
-            player[0] = filter(lambda x: x != "\\", tmp)
+            tmp += urllib.quote(a)
+    player[0] = filter(lambda x: x != "\\", tmp)
+
     jsonStr = player[0]
     prs = json.loads(jsonStr)
 
-    urlStart = prs["host"] + "u" + str(prs["uid"]) + "/video/" + str(prs["vtag"])
+    urlStart = "http://cs" + str(prs["host"]) + ".vk.com/u" + str(prs["uid"]) + "/video/" + str(prs["vtag"])
 
     resolutions = ["240", "360", "480", "720", "1080"]
     videoURLs = []
     if prs["no_flv"]!=1:
-        if str(prs["uid"])=="0": #strange bhvour on old videos
+        if str(prs["uid"])=="0": #strange behaviour on old videos
             urlStart = "http://" + prs["host"] + "/assets/videos/" + str(prs["vtag"]) + str(prs["vkid"]) + ".vk"
         videoURLs.append(urlStart + ".flv")
 
