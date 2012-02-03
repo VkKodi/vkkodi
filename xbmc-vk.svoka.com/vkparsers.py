@@ -63,7 +63,8 @@ if __name__== '__main__':
     import sys
     if len(sys.argv) > 1:
         try:
-            url = "http://vk.com/" + re.findall(r"(video[0-9]+[-_][0-9]+)",sys.argv[1])[0]
+            url = "http://vk.com/" + re.findall(r"(video[-0-9]+[-_][0-9]+)",sys.argv[1])[0]
+	    print url
             for s in GetVideoFiles(url):
                 print s
         except Exception, e:
