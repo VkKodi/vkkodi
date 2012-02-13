@@ -24,5 +24,10 @@
         <string id="30022">MyShows.ru password</string>
         
          <string id="30033">Downloads path</string>
+         <string id="30034">Download (Experimental feature!)</string>
+         <string id="30035">Download:</string>
+         <string id="30036">Select file name</string>
+         <string id="30037">Incorrect setup!</string>
+         <string id="30038">Setup "Download path" option to proceed</string>
 
 </strings>
