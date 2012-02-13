@@ -68,4 +68,4 @@ except Exception, e:
     xbmc.output("CAUGHT ERROR" + str(e))
     if os.path.isfile(authUrlFile):
         os.remove(authUrlFile)
-    raise e
+    raise
