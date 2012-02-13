@@ -68,43 +68,53 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                                     listItem, True)
 
     def Do_SEARCH_RESULT(self):
-        try:
-            import SimpleDownloader
-            listitem = xbmcgui.ListItem("Download (EXPERIMENTAL!!!)", "", self.params.get("thumb"), self.params.get("thumb"))
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_RESULT_DOWNLOAD, thumb=self.params.get("thumb"), v=self.params["v"]), listitem, True)
-        except:
-            pass
         vf = GetVideoFiles("http://vkontakte.ru/video"  + self.params["v"])
         if vf:
             for a in vf:
                 listitem = xbmcgui.ListItem(a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))
                 xbmcplugin.addDirectoryItem(self.handle, a, listitem)
+        try:
+            import SimpleDownloader
+            if len(vf) and vf[0].find('&')==-1:
+                listitem = xbmcgui.ListItem(__language__(30034), "", self.params.get("thumb"), self.params.get("thumb"))
+                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_RESULT_DOWNLOAD, thumb=self.params.get("thumb"), v=self.params["v"]), listitem, True)
+        except:
+            pass
+
 
     def Do_SEARCH_RESULT_DOWNLOAD(self):
         vf = GetVideoFiles("http://vkontakte.ru/video"  + self.params["v"])
         if vf:
             for a in vf:
-                listitem = xbmcgui.ListItem("Download " + a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))
+                listitem = xbmcgui.ListItem(__language__(30035) + " " + a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))
                 xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=VIDEO_DOWNLOAD, thumb=self.params.get("thumb"), v=base64.encodestring(a).strip()), listitem, True)
 
 
     def Do_VIDEO_DOWNLOAD(self):
         dest = __settings__.getSetting('downloads')
+        n = 0
         while not len(dest):
-            xbmc.executebuiltin('XBMC.Notification("Set download location", "%s", 1)' % ("Set download location in settings"))
+            xbmc.executebuiltin('XBMC.Notification("%s", "%s", 7)' % (__language__(30037),__language__(30038)))
             __settings__.openSettings()
             dest = __settings__.getSetting('downloads')
+            n+=1
+            if n>3 and not len(dest):
+                return
         import SimpleDownloader as downloader
         downloader = downloader.SimpleDownloader()
         url = base64.decodestring(self.params["v"])
         user_keyboard = xbmc.Keyboard()
-        user_keyboard.setHeading("File name")
+        user_keyboard.setHeading(__language__(30036))
         user_keyboard.setHiddenInput(False)
         user_keyboard.setDefault(url[url.rfind('/')+1:])
         user_keyboard.doModal()
         if (user_keyboard.isConfirmed()):
+            fn = user_keyboard.getText();
+            ext = url[url.rfind('.'):]
+            if fn[-len(ext):] != ext:
+                fn += ext
             params = { "url": url, "download_path": dest }
-            downloader.download(user_keyboard.getText(), params)
+            downloader.download(fn, params)
 
 
 
