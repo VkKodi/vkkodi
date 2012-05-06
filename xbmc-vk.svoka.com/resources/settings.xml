@@ -5,5 +5,7 @@
     <setting id="history"  type="enum" label="30006" default="3" values="5|10|15|20|25|30|40|50|75|100"/>
     <setting id="hdOnly"   type="bool" label="30017" default="false"/>
     <setting id="sortLen"  type="bool" label="30018" default="false"/>
-    <setting id="downloads" type="folder"  label="30033" default="" />
+<!--     <setting id="downloads" type="folder"  label="30033" default="" />
+ -->
+     <setting id="downloadCmd" type="folder"  label="30040" default="" />
 </settings>
