@@ -145,7 +145,7 @@ def GetApi():
     try:
         return appManager.GetInstance()
     except Exception, e:
-        xbmc.output("CAUGHT ERROR" + str(e))
+        xbmc.log("CAUGHT ERROR" + str(e))
         if os.path.isfile(authUrlFile):
             os.remove(authUrlFile)
         return None

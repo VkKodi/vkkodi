@@ -42,12 +42,12 @@ def GetCookie(mail,passw):
     data = urllib2.urlopen(conn)
     i = data.info()
 
-    #xbmc.output(str(i))
+    #xbmc.log(str(i))
     cookie = re.findall(r'remixsid=(.*?);', str(i))[0]
-    #xbmc.output("Cookie is " + cookie)
+    #xbmc.log("Cookie is " + cookie)
     if not cookie or cookie == 'deleted':
         raise Exception("Wrong login!")
-    #xbmc.output("koka " + cookie)
+    #xbmc.log("koka " + cookie)
     return cookie
 
 

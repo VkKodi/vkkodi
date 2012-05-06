@@ -25,10 +25,12 @@
     <string id="30022">Пароль MyShows.ru</string>
     
          <string id="30033">Сохранять файлы в...</string>
-         <string id="30034">Скачать (работает странно, эксперимент!)</string>
+         <string id="30034">Скачать/Открыть</string>
          <string id="30035">Скачать:</string>
          <string id="30036">Выберите имя файла</string>
          <string id="30037">Настройте путь для закачек!</string>
          <string id="30038">Выберите папку в настройке "Сохранять файлы в..."</string>
+         
+         <string id="30040">Команда скачивания</string>
 
 </strings>

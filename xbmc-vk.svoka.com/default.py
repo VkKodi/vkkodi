@@ -59,13 +59,13 @@ def Main():
     else:
         listItem = xbmcgui.ListItem("-- something wrong, try again --")
         xbmcplugin.addDirectoryItem(globHandle, sys.argv[0], listItem, True)
-        xbmc.output("THIS IS THE END")
+        xbmc.log("THIS IS THE END")
         raise Exception("Api is null")
 
 try:
     Main()
 except Exception, e:
-    xbmc.output("CAUGHT ERROR" + str(e))
+    xbmc.log("CAUGHT ERROR" + str(e))
     if os.path.isfile(authUrlFile):
         os.remove(authUrlFile)
     raise
