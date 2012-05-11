@@ -102,7 +102,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
 
     def GetSearchHistory(self, searchId = None):
         history = []
-        if os.path.isfile(saved_search_file % unicode(searchId):
+        if os.path.isfile(saved_search_file % unicode(searchId)):
             fl = open(saved_search_file % unicode(searchId),"r")
             history = fl.readlines()
             history = map(lambda s: s.strip(), history)

@@ -76,7 +76,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                     n = __language__(30039) + " " + n
                 listitem = xbmcgui.ListItem(n, "", self.params.get("thumb"), self.params.get("thumb"))
                 xbmcplugin.addDirectoryItem(self.handle, a, listitem)
-        if vf:        
+        if vf and __settings__.getSetting("ShowDownload"):        
             for a in vf:
                 if a.startswith("http"):
                     listitem = xbmcgui.ListItem(__language__(30035) + " " + a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))

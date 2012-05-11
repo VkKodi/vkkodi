@@ -8,4 +8,5 @@
 <!--     <setting id="downloads" type="folder"  label="30033" default="" />
  -->
      <setting id="downloadCmd" type="folder"  label="30040" default="" />
+     <setting id="ShowDownload" type="bool" label="30041" default="true" />
 </settings>
