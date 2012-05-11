@@ -71,15 +71,17 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         vf = GetVideoFiles("http://vkontakte.ru/video"  + self.params["v"])
         if vf:
             for a in vf:
-                listitem = xbmcgui.ListItem(a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))
+                n = a[a.rfind("/")+1:]
+                if a.startswith("http"):
+                    n = __language__(30039) + " " + n
+                listitem = xbmcgui.ListItem(n, "", self.params.get("thumb"), self.params.get("thumb"))
                 xbmcplugin.addDirectoryItem(self.handle, a, listitem)
-        try:
-            import SimpleDownloader
-            if len(vf) and vf[0].find('&')==-1:
-                listitem = xbmcgui.ListItem(__language__(30034), "", self.params.get("thumb"), self.params.get("thumb"))
-                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_RESULT_DOWNLOAD, thumb=self.params.get("thumb"), v=self.params["v"]), listitem, True)
-        except:
-            pass
+        if vf:        
+            for a in vf:
+                if a.startswith("http"):
+                    listitem = xbmcgui.ListItem(__language__(30035) + " " + a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))
+                    xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=VIDEO_DOWNLOAD, thumb=self.params.get("thumb"), v=base64.encodestring(a).strip()), listitem, False)
+
 
 
     def Do_SEARCH_RESULT_DOWNLOAD(self):
