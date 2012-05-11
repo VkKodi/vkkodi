@@ -38,7 +38,7 @@ __language__ = __settings__.getLocalizedString
 
 APP_ID = "2054573"
 USER_AUTH_URL  = "http://j.mp/vk-xbmc-media"
-authUrlFile = os.path.join(xbmc.translatePath('special://temp/'), 'vk-auth-url.sess')
+authUrlFile = os.path.join(xbmc.translatePath('special://temp/').decode('utf-8'), u'vk-auth-url.sess')
 
 
 
