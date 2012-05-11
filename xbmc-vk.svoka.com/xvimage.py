@@ -25,7 +25,7 @@ from datetime import datetime
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
 __language__ = __settings__.getLocalizedString
-saved_search_file = os.path.join(xbmc.translatePath('special://temp/'), 'vk-search.sess')
+saved_search_file = os.path.join(xbmc.translatePath('special://temp/').decode('utf-8'), u'vk-search.sess')
 
 #modes
 ALBUM = "ALBUM"

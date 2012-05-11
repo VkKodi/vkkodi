@@ -60,7 +60,7 @@ class XBMCVkUI_Base:
 
 import xbmc,xbmcaddon, xbmcgui
 
-saved_search_file = os.path.join(xbmc.translatePath('special://temp/'), 'vk-search%s.sess')
+saved_search_file = os.path.join(xbmc.translatePath('special://temp/').decode('utf-8'), u'vk-search%s.sess')
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
 SEARCH, SEARCH_HISTORY = "SEARCH,SEARCH_HISTORY".split(",")
 
@@ -102,8 +102,8 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
 
     def GetSearchHistory(self, searchId = None):
         history = []
-        if os.path.isfile(saved_search_file % searchId):
-            fl = open(saved_search_file % searchId,"r")
+        if os.path.isfile(saved_search_file % unicode(searchId):
+            fl = open(saved_search_file % unicode(searchId),"r")
             history = fl.readlines()
             history = map(lambda s: s.strip(), history)
             history = filter(None, history)
@@ -117,8 +117,8 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
         max = int(__settings__.getSetting('history'))
         max = [5, 10, 15, 20, 25, 30, 40, 50, 75, 100][max]
         lines = []
-        if os.path.isfile(saved_search_file % searchId):
-            fl = open(saved_search_file % searchId,"r")
+        if os.path.isfile(saved_search_file % unicode(searchId)):
+            fl = open(saved_search_file % unicode(searchId),"r")
             lines = fl.readlines()
             fl.close()
         lines = map(lambda s: s.strip(), lines)
@@ -126,7 +126,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
         while query in lines:   #could replace with `if`, nothing should change...
             lines.remove(query)
         lines.insert(0, query)
-        fl = open(saved_search_file % searchId, "w")
+        fl = open(saved_search_file % unicode(searchId), "w")
         fl.write("\n".join(lines[:max]))
         fl.close()
 
