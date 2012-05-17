@@ -193,6 +193,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         regex = re.compile(r'<img width="60" src="(.*?)" alt="(.*?)" class="poster-pic" />.*?<span class="english">(.*?)</span>',re.UNICODE|re.DOTALL)
         r = regex.findall(html)
         for thumb, ru, en in r:
+            thumb = thumb.replace('60.jpg','207.jpg')
             title = ru.decode("utf-8") + " / " + en.decode('utf-8')
             listItem = xbmcgui.ListItem(PrepareString(title) , en, thumb, thumb)
             q= ru + " " + en.replace("(","").replace(")","")
