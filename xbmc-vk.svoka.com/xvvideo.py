@@ -147,10 +147,12 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_VIDEOS) , listItem, True)
         listItem = xbmcgui.ListItem(__language__(30042))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=GROUPS) , listItem, True)
+
+        # uncoment two bottom lines after you add  add permisions to retrive friends. Test befor release.
         # listItem = xbmcgui.ListItem(__language__(30043))
         # xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIENDS) , listItem, True)
-#        listItem = xbmcgui.ListItem(__language__(30020))
-#        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_SHOWS_LIST) , listItem, True)
+        # listItem = xbmcgui.ListItem(__language__(30020))
+        # xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_SHOWS_LIST) , listItem, True)
 
     def Do_NEXT_PAGE(self):
         page = self.params.get('page')
@@ -213,7 +215,6 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         for thumb, ru, id, en in res:
             listItem = xbmcgui.ListItem(PrepareString(ru), en, thumb, thumb)
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASONS,id=id, thumb=thumb), listItem, True)
-
 
     def Do_SEASONS(self):
         srl = minidom.parse(urllib.urlopen("http://kinobaza.tv/film/%s?format=xml" % self.params["id"]))
