@@ -227,7 +227,6 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         r = regex.findall(html)
         for thumb, ru, en in r:
             thumb = thumb.replace('60.jpg','207.jpg')
-            print thumb
             title = ru.decode("utf-8") + " / " + en.decode('utf-8')
             listItem = xbmcgui.ListItem(PrepareString(title) , en, thumb, thumb)
             q= ru + " " + en.replace("(","").replace(")","")
