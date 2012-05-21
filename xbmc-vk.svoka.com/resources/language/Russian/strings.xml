@@ -33,8 +33,9 @@
          <string id="30039">Смотреть:</string>
          <string id="30040">Команда скачивания</string>
          <string id="30041">Показывать вариант "скачать"</string>
-         <string id="30042">Группы</string>
-         <string id="30043">Друзья</string>
+        <string id="30042">Группы</string>
+        <string id="30043">Друзья</string>
+        <string id="30044">-- Следуящая Страница (%d) --</string>
 
 
 </strings>
