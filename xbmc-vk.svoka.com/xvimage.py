@@ -66,19 +66,19 @@ class XVKImage(XBMCVkUI_Base):
         albums=self.api.call("photos.getAlbums")
         q = []
         for album in albums:
-            q.append(album["owner_id"] + "_" + album["thumb_id"])
+            q.append(str(album["owner_id"]) + "_" + str(album["thumb_id"]))
 
         thumbs = self.api.call("photos.getById", photos=",".join(q))
         album_thumbs = dict()
         for e in thumbs:
-            album_thumbs[e["aid"]] = e["src"]
+            album_thumbs[str(e["aid"])] = e["src"]
 
         items = []
         for a in albums:
             e = ( a["title"] + unicode(" (%s photo)" % a["size"]),
                   a["description"],
-                  album_thumbs[a["aid"]],
-                  a["aid"],
+                  album_thumbs[str(a["aid"])],
+                  str(a["aid"]),
                   a["owner_id"]  )
             items.append(e)
         return items
