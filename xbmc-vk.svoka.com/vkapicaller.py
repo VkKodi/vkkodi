@@ -22,6 +22,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
+import re
 
 try:
    from hashlib import md5
@@ -36,6 +37,32 @@ def ApiFromURL(appId, url):
     mid = obj["mid"]
     secret = obj["secret"]
     return VkApp(appId, sid, mid, secret)
+
+def ApiFromURLNew(appId, url):
+    act = re.findall(r'access_token=(.*?)(?:$|&)', url)[0]
+    return VkAppNew(act)
+
+class VkAppNew:
+    def __init__(self, accessToken):
+        #param is API call parameters
+        self.param = {'access_token': accessToken }
+
+    def call(self, api, **vars):
+        v = dict()
+        v.update(self.param)
+        v.update(vars)
+
+        request = "&".join(["%s=%s" % (str(key), urllib.quote(str(v[key]))) for key in v.keys()])
+        request_url = "https://api.vk.com/method/" + api + "?" +request
+
+        reply = urllib.urlopen(request_url)
+        #resp = json.loads(replystr)
+        #replystr = reply.read()
+        resp = json.load(reply)
+        if "error" in resp:
+            raise Exception("Error, error! DATA: " + str(resp))
+        else:
+            return resp["response"]
 
 
 class VkApp:

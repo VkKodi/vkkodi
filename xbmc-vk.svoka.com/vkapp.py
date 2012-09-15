@@ -17,7 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = 'Volodymyr Shcherban'
 
-import sys,urllib, urllib2, cookielib, xbmcaddon, xbmc, xbmcgui, xbmcplugin, os
+import urllib2, cookielib, xbmcaddon, xbmc, xbmcgui, xbmcplugin, os, re
+
 
 try:
     import json
@@ -40,9 +41,10 @@ APP_ID = "2054573"
 USER_AUTH_URL  = "http://j.mp/vk-xbmc-media"
 authUrlFile = os.path.join(xbmc.translatePath('special://temp/').decode('utf-8'), u'vk-auth-url.sess')
 
+OAUTH_URL="http://oauth.vk.com/authorize?client_id=%s&scope=friends,photos,audio,video,offline&redirect_uri=http://oauth.vk.com/blank.html&display=wap&response_type=token" % APP_ID
 
 
-from vkapicaller import ApiFromURL
+from vkapicaller import ApiFromURLNew as UrlToApi
 
 class XBMCVkAppCreator:
     def __init__(self):
@@ -54,11 +56,44 @@ class XBMCVkAppCreator:
         return self.VkInstance or self.NewInstance()
 
     def NewInstance(self):
-        loginSuccessUrl = self._AuthVKApp()
+        loginSuccessUrl = self._AuthVKAppNew()
         if not loginSuccessUrl:
             raise Exception("Error, could not authorize application")
-        self.VkInstance = ApiFromURL(APP_ID, loginSuccessUrl)
+        self.VkInstance = UrlToApi(APP_ID, loginSuccessUrl)
         return self.VkInstance
+
+
+    def _AuthVKAppNew(self, ignoreFile=False):
+        if os.path.isfile(authUrlFile) and not ignoreFile:
+            f = open(authUrlFile, "r")
+            ret = f.read()
+            f.close()
+            return ret
+
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+        login = opener.open("http://vk.com/login.php?email=%s&pass=%s" % (__settings__.getSetting('username'),
+                                                                          __settings__.getSetting('password')))
+        auth = opener.open(OAUTH_URL)
+        accUrl = ''
+        while login.url.startswith('http://vk.com/login.php'):
+            if not self._askLogin():
+                raise Exception("no valid user/password provided")
+            auth = opener.open(OAUTH_URL)
+
+        if auth.url.startswith('http://oauth.vk.com/blank.html'):
+            accUrl = auth.url
+        else:
+            authorizeForm = auth.read()
+            authLink = re.findall(r'action="(.*?)"', authorizeForm)
+            if authLink:
+                result = opener.open(authLink[0])
+                if "access_token" in result.url:
+                    accUrl = result.url
+
+        fl = open(authUrlFile, "w")
+        fl.write(accUrl)
+        fl.close()
+        return accUrl
 
 
     def _AuthVKApp(self, showBrowser = False):
