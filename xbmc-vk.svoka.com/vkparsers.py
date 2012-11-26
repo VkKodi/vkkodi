@@ -44,7 +44,7 @@ def GetVideoFiles(url):
     jsonStr = player[0]
     prs = json.loads(jsonStr)
 
-    urlStart = "http://cs" + str(prs["host"]) + ".vk.com/u" + str(prs["uid"]) + "/video/" + str(prs["vtag"])
+    urlStart = "http://cs" + str(prs["host"]) + ".vk.com/u" + str(prs["uid"]) + "/videos/" + str(prs["vtag"])
 
     resolutions = ["240", "360", "480", "720", "1080"]
     videoURLs = []
