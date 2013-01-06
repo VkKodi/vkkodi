@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import urllib
-
+from vk_auth import auth
 __author__ = 'Volodymyr Shcherban'
 
 import urllib2, cookielib, xbmcaddon, xbmc, xbmcgui, xbmcplugin, os, re
@@ -72,38 +72,22 @@ class XBMCVkAppCreator:
             f.close()
             return ret
 
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
-        authParams = opener.open(OAUTH_URL).read()
-        print "getting auth url " + OAUTH_URL
-        to = re.findall(r'<input type="hidden" name="to" value="(.*?)"',authParams)[0]
-        ip_h = re.findall(r'<input type="hidden" name="ip_h" value="(.*?)"',authParams)[0]
-        action = 'https://login.vk.com/?act=login&soft=1&utf8=1'
         login = None
         accUrl=""
         isLoginPassword = len(__settings__.getSetting('password')) and len(__settings__.getSetting('username'))
-        while not accUrl:
+        count = 5;
+        while not accUrl and count>0:
             if not isLoginPassword:
                 if not self._askLogin():
                     raise Exception("no valid user/password provided")
-            data = {'to':to, 'ip_h':ip_h, '_origin': 'http://oauth.vk.com', 'email':__settings__.getSetting('username'),
-                    'pass':__settings__.getSetting('password')}
-            login = opener.open(action, data= urllib.urlencode(data))
-            print "login url now is " + login.url
             isLoginPassword = False
+            count -= 0;
+            try:
+                token, id = auth(__settings__.getSetting('username'),__settings__.getSetting('password'), APP_ID,'friends,groups,photos,audio,video,offline');
+                accUrl = 'http://oauth.vk.com/blank.html#access_token='+token+'&expires_in=0&user_id='+id
+            except:
+                pass
 
-            if login.url.startswith('http://oauth.vk.com/blank.html'):
-                accUrl = login.url
-            else:
-                authorizeForm = login.read()
-                authLink = re.findall(r'action="(.*?)"', authorizeForm)
-                if authLink:
-                    print authLink[0]
-                    if not authLink[0].startswith('https://login.vk.com'):
-                        result = opener.open(authLink[0])
-                        if "access_token" in result.url:
-                            accUrl = result.url
-                        else:
-                            print result.url
         fl = open(authUrlFile, "w")
         fl.write(accUrl)
         fl.close()
