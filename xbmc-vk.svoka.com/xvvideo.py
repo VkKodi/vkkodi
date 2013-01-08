@@ -38,8 +38,6 @@ SEARCH_RESULT_DOWNLOAD = "SEARCH_RESULT_DOWNLOAD"
 VIDEO_DOWNLOAD = "VIDEO_DOWNLOAD"
 GROUP_VIDEO = "GROUP_VIDEO"
 GROUPS = "GROUPS"
-FRIENDS = "FRIENDS"
-FRIEND_VIDEO = "FRIEND_VIDEO"
 NEXT_PAGE = "NEXT_PAGE"
 # ALBUM_VIDEO = "ALBUM_VIDEO"
 
@@ -151,9 +149,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         listItem = xbmcgui.ListItem(__language__(30042))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=GROUPS) , listItem, True)
 
-        # uncoment two bottom lines after you add  add permisions to retrive friends. Test befor release.
-        # listItem = xbmcgui.ListItem(__language__(30043))
-        # xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIENDS) , listItem, True)
+        self.friendsEntry()
         # listItem = xbmcgui.ListItem(__language__(30020))
         # xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_SHOWS_LIST) , listItem, True)
 
@@ -186,8 +182,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                 listItem = xbmcgui.ListItem(__language__(30044)%2)
                 xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1, gid=gid) , listItem, True)
 
-    def Do_FRIEND_VIDEO(self):
-        uid = self.params["uid"]
+    def processFriendEntry(self, uid):
         v = self.api.call('video.get', uid=uid, count=200)
         if v:
             for a in v[1:]:
@@ -203,13 +198,6 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             listItem = xbmcgui.ListItem(group['name'], "", group['photo_big'])
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=GROUP_VIDEO, gid=group['gid'], thumb=group['photo_medium'])  , listItem, True)
 
-    def Do_FRIENDS(self):
-        resp = self.api.call('friends.get',fields='uid,first_name,last_name,photo,nickname')
-        friends = resp[1:]
-        for friend in friends:
-            name = "%s %s (%s)" % (friend['last_name'], friend['first_name'], friend['nickname'])
-            listItem = xbmcgui.ListItem(name, "", friend['photo'])
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIEND_VIDEO, uid=friend['uid'], thumb=friend['photo'])  , listItem, True)
 
     def Do_SERIES(self):
         html = urllib.urlopen("http://kinobaza.tv/series").read()

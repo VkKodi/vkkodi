@@ -50,6 +50,12 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_MUSIC) , listItem, True)
         listItem = xbmcgui.ListItem(__language__(30016))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=HYPED_ARTISTS) , listItem, True)
+        self.friendsEntry()
+
+    def processFriendEntry(self, uid):
+        for a in self.api.call("audio.get", uid=uid):
+            self.AddAudioEntry(a)
+
 
     def Do_HYPED_ARTISTS(self):
         srl = minidom.parse(urllib.urlopen("http://ws.audioscrobbler.com/2.0/?method=chart.gethypedartists&api_key=42db3eb160b603b55f8886e8c4e9a8f4"))
