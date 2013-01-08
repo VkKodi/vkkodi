@@ -170,7 +170,10 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         if len(v[1:]) >= self.per_page:
             page = int(page); page += 1
             listItem = xbmcgui.ListItem(__language__(30044)%(page+1))
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=page, gid=gid) , listItem, True)
+            if gid:
+                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=page, gid=gid) , listItem, True)
+            else:
+                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=page, uid=uid) , listItem, True)
 
     def Do_GROUP_VIDEO(self):
         gid = self.params["gid"]
@@ -189,7 +192,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                 self.ProcessFoundEntry(a)
             if len(v[1:]) >= self.per_page:
                 listItem = xbmcgui.ListItem(__language__(30044)%2)
-                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1, gid=gid) , listItem, True)
+                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1, uid=uid) , listItem, True)
 
     def Do_GROUPS(self):
         resp = self.api.call('groups.get',extended=1)
