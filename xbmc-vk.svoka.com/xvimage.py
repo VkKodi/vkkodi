@@ -39,6 +39,7 @@ class XVKImage(XBMCVkUI_Base):
         for title, title2, thumb, id, owner in self.GetAlbums():
             listItem = xbmcgui.ListItem(title, title2, thumb, thumb, ) #search history
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM, album=id, user=owner) , listItem, True)
+        self.friendsEntry()
 
 
             
@@ -60,10 +61,17 @@ class XVKImage(XBMCVkUI_Base):
             listItem = xbmcgui.ListItem(title, "", thumb, thumb, ) #search history
             xbmcplugin.addDirectoryItem(self.handle, url , listItem, False)
 
+    def processFriendEntry(self, uid):
+        for title, title2, thumb, id, owner in self.GetAlbums(uid):
+            listItem = xbmcgui.ListItem(title, title2, thumb, thumb, ) #search history
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM, album=id, user=owner) , listItem, True)
 
-
-    def GetAlbums(self):
-        albums=self.api.call("photos.getAlbums", need_covers=1)
+    def GetAlbums(self, uid=None):
+        albums=None
+        if uid:
+            albums=self.api.call("photos.getAlbums", need_covers=1, uid=uid)
+        else:
+            albums=self.api.call("photos.getAlbums", need_covers=1)
         items = []
         for a in albums:
             print a.get('thumb_src')

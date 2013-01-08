@@ -24,6 +24,8 @@ import xbmcplugin, urllib, sys, os
 PLUGIN_NAME = 'VK-xbmc'
 
 HOME = 'HOME'
+FRIENDS = "FRIENDS"
+FRIEND_ENTRY = "FRIEND_ENTRY"
 
 
 def PrepareString(str):
@@ -54,8 +56,26 @@ class XBMCVkUI_Base:
         __dict_params.update(parameters)
         return sys.argv[0] + "?" + urllib.urlencode(__dict_params)
 
+    def friendsEntry(self):
+        listItem = xbmcgui.ListItem(xbmcaddon.Addon(id='xbmc-vk.svoka.com').getLocalizedString(30043))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIENDS) , listItem, True)
 
+    def Do_FRIENDS(self):
+        resp = self.api.call('friends.get',fields='uid,first_name,last_name,photo,nickname')
+        friends = resp[1:]
+        for friend in friends:
+            name = "%s %s" % (friend.get('last_name'), friend.get('first_name'))
+            if friend.get('nickname'):
+                name += friend.get('nickname')
+            listItem = xbmcgui.ListItem(name, "", friend['photo'])
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIEND_ENTRY, uid=friend['uid'], thumb=friend['photo'])  , listItem, True)
 
+    def Do_FRIEND_ENTRY(self):
+        uid = self.params["uid"]
+        self.processFriendEntry(uid) 
+
+    def processFriendEntry(self, uid):
+        pass
 
 
 import xbmc,xbmcaddon, xbmcgui
@@ -75,6 +95,7 @@ class XBMCVkUI_Search_Base(XBMCVkUI_Base):
         if self.GetSearchHistory(self.histId):
             listItem = xbmcgui.ListItem(self.locale["history"]) #search history
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_HISTORY) , listItem, True)
+
 
     def Do_SEARCH(self):
         query = self.params.get("query")
