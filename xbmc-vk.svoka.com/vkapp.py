@@ -144,7 +144,8 @@ class XBMCVkAppCreator:
                 if not self._askLogin():
                     return ""
         return self.cookie
-
+    def GetCookie(self):
+        return self._initCookie()
 
     def _askLogin(self):
         user_keyboard = xbmc.Keyboard()
