@@ -17,7 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = 'Volodymyr Shcherban'
 
-import urllib, re
+import urllib, urllib2, re, urlparse, cookielib
+import vkapp
 
 try:
     import json
@@ -26,7 +27,15 @@ except ImportError:
 
 
 def GetVideoFiles(url):
-    html = urllib.urlopen(url).read()
+    app = vkapp.appManager
+    # TODO make this a generic function in appManager
+    proc = urllib2.HTTPCookieProcessor()
+    proc.cookiejar.set_cookie(cookielib.Cookie(0, 'remixsid', app.GetCookie(),
+                                   '80', False, 'vk.com', True, False, '/',
+                                   True, False, None, False, None, None, None))
+    opener = urllib2.build_opener(urllib2.HTTPHandler(), proc)
+    html = opener.open(url).read()    
+
     player = re.findall(r"\\nvar vars =(.*?});", html)
     if not player:
         yt = re.findall(r"www\.youtube\.com\\/embed\\/(.*?)\?autoplay",html)
