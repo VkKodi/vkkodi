@@ -63,7 +63,7 @@ def GetVideoFiles(url):
         videoURLs.append(urlStart + ".flv")
     
     if prs["hd"]>0 or prs["no_flv"]==1:
-        for i in range(prs["hd"]+1):
+        for i in range(int(prs["hd"])+1):
             videoURLs.append(urlStart + "." + resolutions[i] + ".mp4")
     
     videoURLs.reverse()
