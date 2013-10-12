@@ -61,14 +61,14 @@ class XBMCVkUI_Base:
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIENDS) , listItem, True)
 
     def Do_FRIENDS(self):
-        resp = self.api.call('friends.get',fields='uid,first_name,last_name,photo,nickname')
+        resp = self.api.call('friends.get',fields='uid,first_name,last_name,photo_big,nickname')
         friends = resp[1:]
         for friend in friends:
             name = "%s %s" % (friend.get('last_name'), friend.get('first_name'))
             if friend.get('nickname'):
                 name += friend.get('nickname')
-            listItem = xbmcgui.ListItem(name, "", friend['photo'])
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIEND_ENTRY, uid=friend['uid'], thumb=friend['photo'])  , listItem, True)
+            listItem = xbmcgui.ListItem(name, "", friend['photo_big'])
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIEND_ENTRY, uid=friend['uid'], thumb=friend['photo_big'])  , listItem, True)
 
     def Do_FRIEND_ENTRY(self):
         uid = self.params["uid"]
