@@ -149,7 +149,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         listItem = xbmcgui.ListItem(__language__(30042))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=GROUPS) , listItem, True)
 
-        self.friendsEntry()
+        self.friendsEntry("video")
         # listItem = xbmcgui.ListItem(__language__(30020))
         # xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_SHOWS_LIST) , listItem, True)
 
