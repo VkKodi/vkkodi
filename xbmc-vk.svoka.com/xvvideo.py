@@ -73,7 +73,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             ,"duration" : duration
             ,"tagline" : a["description"]
             } )
-        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_RESULT, thumb=thumb, v=videos),
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_RESULT, thumb=thumb, v=videos, title=a["title"].encode('utf-8')),
                                     listItem, True)
 
     def Do_SEARCH_RESULT(self):
@@ -87,6 +87,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                     n = "YouTube: " + n
                 listitem = xbmcgui.ListItem(n, "", self.params.get("thumb"), self.params.get("thumb"), path=a)
                 listitem.setProperty('IsPlayable', 'true')
+                listitem.setInfo(type = "video", infoLabels = {'title': self.params.get("title")})                
                 xbmcplugin.addDirectoryItem(self.handle, a, listitem)
         if vf and __settings__.getSetting("ShowDownload"):        
             for a in vf:
