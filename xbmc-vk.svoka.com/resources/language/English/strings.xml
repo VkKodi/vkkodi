@@ -22,19 +22,20 @@
         <string id="30020">Personal MyShows.ru list</string>
         <string id="30021">MyShows.ru user</string>
         <string id="30022">MyShows.ru password</string>
+        <string id="30023">Recomended music</string>
+        <string id="30024">Popular music</string>
         
-         <string id="30033">Downloads path</string>
-         <string id="30034">Download/Open:</string>
-         <string id="30035">Download:</string>
-         <string id="30036">Select file name</string>
-         <string id="30037">Incorrect setup!</string>
-         <string id="30038">Setup "Download path" option to proceed</string>
+        <string id="30033">Downloads path</string>
+        <string id="30034">Download/Open:</string>
+        <string id="30035">Download:</string>
+        <string id="30036">Select file name</string>
+        <string id="30037">Incorrect setup!</string>
+        <string id="30038">Setup "Download path" option to proceed</string>
         <string id="30039">Play:</string>
-         <string id="30040">Download command</string>
+        <string id="30040">Download command</string>
 
-         <string id="30041">Show download opiton</string>
-         <string id="30042">Groups Video</string>
+        <string id="30041">Show download opiton</string>
+        <string id="30042">Groups Video</string>
         <string id="30043">Friends</string>
         <string id="30044">-- Next Page (%d) --</string>
-
 </strings>

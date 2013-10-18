@@ -33,7 +33,7 @@ __language__ = __settings__.getLocalizedString
 saved_search_file = os.path.join(xbmc.translatePath('special://temp/').decode('utf-8'), u'vk-search.sess')
 
 #modes
-ALBUM,MY_MUSIC,HYPED_ARTISTS = "ALBUM,MY_MUSIC,HYPED_ARTISTS".split(',')
+ALBUM,MY_MUSIC,HYPED_ARTISTS,RECOMENDED_MUSIC,POPULAR_MUSIC = "ALBUM,MY_MUSIC,HYPED_ARTISTS,RECOMENDED_MUSIC,POPULAR_MUSIC".split(',')
 
 from xml.dom import minidom
 
@@ -50,6 +50,10 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_MUSIC) , listItem, True)
         listItem = xbmcgui.ListItem(__language__(30016))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=HYPED_ARTISTS) , listItem, True)
+        listItem = xbmcgui.ListItem(__language__(30023))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=RECOMENDED_MUSIC) , listItem, True)
+        listItem = xbmcgui.ListItem(__language__(30024))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=POPULAR_MUSIC) , listItem, True)
         self.friendsEntry("music")
 
     def processFriendEntry(self, uid):
@@ -85,7 +89,13 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         for a in self.api.call("audio.get"):
             self.AddAudioEntry(a)
 
+    def Do_RECOMENDED_MUSIC(self):
+        for a in self.api.call("audio.getRecommendations", count=500):
+            self.AddAudioEntry(a)
 
+    def Do_POPULAR_MUSIC(self):
+        for a in self.api.call("audio.getPopular", count=500):
+            self.AddAudioEntry(a)
 
     def AddAudioEntry(self, a):
         title = a.get("artist")
@@ -94,6 +104,8 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         title += a.get("title")
         d = unicode(datetime.timedelta(seconds=int(a["duration"])))
         listTitle = d + u" - " + title
+
         listItem = xbmcgui.ListItem(PrepareString(listTitle) )
         listItem.setInfo(type = 'music', infoLabels = {'title':title})
+
         xbmcplugin.addDirectoryItem(self.handle, a["url"] , listItem, False)

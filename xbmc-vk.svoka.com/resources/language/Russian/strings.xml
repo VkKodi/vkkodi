@@ -19,23 +19,22 @@
         <string id="30017">Только HD видео</string>
         <string id="30018">Сортировка видео по длинне</string>        
         <string id="30019">То же, только в HD</string>
-
-    <string id="30020">Персональный список с MyShows.ru</string>
-    <string id="30021">Пользователь MyShows.ru</string>
-    <string id="30022">Пароль MyShows.ru</string>
+        <string id="30020">Персональный список с MyShows.ru</string>
+        <string id="30021">Пользователь MyShows.ru</string>
+        <string id="30022">Пароль MyShows.ru</string>
+        <string id="30023">Рекомендованная музыка</string>
+        <string id="30024">Популярная музыка</string>
     
-         <string id="30033">Сохранять файлы в...</string>
-         <string id="30034">Скачать/Открыть:</string>
-         <string id="30035">Скачать:</string>
-         <string id="30036">Выберите имя файла</string>
-         <string id="30037">Настройте путь для закачек!</string>
-         <string id="30038">Выберите папку в настройке "Сохранять файлы в..."</string>
-         <string id="30039">Смотреть:</string>
-         <string id="30040">Команда скачивания</string>
-         <string id="30041">Показывать вариант "скачать"</string>
+        <string id="30033">Сохранять файлы в...</string>
+        <string id="30034">Скачать/Открыть:</string>
+        <string id="30035">Скачать:</string>
+        <string id="30036">Выберите имя файла</string>
+        <string id="30037">Настройте путь для закачек!</string>
+        <string id="30038">Выберите папку в настройке "Сохранять файлы в..."</string>
+        <string id="30039">Смотреть:</string>
+        <string id="30040">Команда скачивания</string>
+        <string id="30041">Показывать вариант "скачать"</string>
         <string id="30042">Группы</string>
         <string id="30043">Друзья</string>
         <string id="30044">-- Следуящая Страница (%d) --</string>
-
-
 </strings>
