@@ -24,8 +24,13 @@ import base64
 
 from xml.dom import minidom
 
-from vkparsers import GetVideoFiles
+from vkparsers import GetVideoFilesAPI
 from xbmcvkui import XBMCVkUI_VKSearch_Base,SEARCH, PrepareString
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 
 __settings__ = xbmcaddon.Addon(id='xbmc-vk.svoka.com')
@@ -45,9 +50,8 @@ NEXT_PAGE = "NEXT_PAGE"
 
 class XVKVideo(XBMCVkUI_VKSearch_Base):
 
-    per_page = 50
-
     def __init__(self, *params):
+        self.per_page = 50
         self.histId = None
         self.apiName = "video.search"
         self.locale = {"newSearch":__language__(30005), "history": __language__(30007), "input":__language__(30003)}
@@ -64,20 +68,20 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
 
     def ProcessFoundEntry(self, a):
         duration = str(datetime.timedelta(seconds=int(a["duration"])))
-        title =   duration + " - " + PrepareString(a["title"])
-        videos = str(a["owner_id"])+"_"+str(a.get("id") or a.get("vid"))
+        title = duration + " - " + PrepareString(a["title"])
+        videos = base64.encodestring(json.dumps(a["files"]))
         thumb = a.get("thumb") or a.get("image")
         listItem = xbmcgui.ListItem(title, a["description"], thumb, thumb)
         listItem.setInfo(type = "Video", infoLabels = {
             "title"     : title
             ,"duration" : duration
-            ,"tagline" : a["description"]
+            ,"tagline"  : a["description"]
             } )
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH_RESULT, thumb=thumb, v=videos, title=a["title"].encode('utf-8')),
                                     listItem, True)
 
     def Do_SEARCH_RESULT(self):
-        vf = GetVideoFiles("http://vkontakte.ru/video"  + self.params["v"])
+        vf = GetVideoFilesAPI(self.params["v"])
         if vf:
             for a in vf:
                 n = a[a.rfind("/")+1:]
@@ -96,7 +100,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                     xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=VIDEO_DOWNLOAD, thumb=self.params.get("thumb"), v=base64.encodestring(a).strip()), listitem, False)
 
     def Do_SEARCH_RESULT_DOWNLOAD(self):
-        vf = GetVideoFiles("http://vkontakte.ru/video"  + self.params["v"])
+        vf = GetVideoFilesAPI(self.params["v"])
         if vf:
             for a in vf:
                 listitem = xbmcgui.ListItem(__language__(30035) + " " + a[a.rfind("/")+1:], "", self.params.get("thumb"), self.params.get("thumb"))
@@ -114,41 +118,17 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
         url = base64.decodestring(self.params["v"])
         os.system(downloadCmd + " " + url)
         
-        # dest = __settings__.getSetting('downloads')
-        # n = 0
-        # while not len(dest):
-        #     xbmc.executebuiltin('XBMC.Notification("%s", "%s", 7)' % (__language__(30037),__language__(30038)))
-        #     __settings__.openSettings()
-        #     dest = __settings__.getSetting('downloads')
-        #     n+=1
-        #     if n>3 and not len(dest):
-        #         return
-        # import SimpleDownloader as downloader
-        # downloader = downloader.SimpleDownloader()
-        # url = base64.decodestring(self.params["v"])
-        # user_keyboard = xbmc.Keyboard()
-        # user_keyboard.setHeading(__language__(30036))
-        # user_keyboard.setHiddenInput(False)
-        # user_keyboard.setDefault(url[url.rfind('/')+1:])
-        # user_keyboard.doModal()
-        # if (user_keyboard.isConfirmed()):
-        #     fn = user_keyboard.getText();
-        #     ext = url[url.rfind('.'):]
-        #     if fn[-len(ext):] != ext:
-        #         fn += ext
-        #     params = { "url": url, "download_path": dest }
-        #     downloader.download(fn, params)
 
     def Do_HOME(self):
         XBMCVkUI_VKSearch_Base.Do_HOME(self)
         listItem = xbmcgui.ListItem(__language__(30010))
-        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=TOP_DOWNLOADS) , listItem, True)
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=TOP_DOWNLOADS), listItem, True)
         listItem = xbmcgui.ListItem(__language__(30011))
-        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SERIES) , listItem, True)
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SERIES), listItem, True)
         listItem = xbmcgui.ListItem(__language__(30012))
-        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_VIDEOS) , listItem, True)
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=MY_VIDEOS), listItem, True)
         listItem = xbmcgui.ListItem(__language__(30042))
-        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=GROUPS) , listItem, True)
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=GROUPS), listItem, True)
 
         self.friendsEntry("video")
         # listItem = xbmcgui.ListItem(__language__(30020))
@@ -193,7 +173,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                 self.ProcessFoundEntry(a)
             if len(v[1:]) >= self.per_page:
                 listItem = xbmcgui.ListItem(__language__(30044)%2)
-                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1, uid=uid) , listItem, True)
+                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1, uid=uid), listItem, True)
 
     def Do_GROUPS(self):
         resp = self.api.call('groups.get',extended=1)
@@ -247,7 +227,7 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
                 self.ProcessFoundEntry(a)
             if len(v[1:]) >= self.per_page:
                 listItem = xbmcgui.ListItem(__language__(30044)%2)
-                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1) , listItem, True)
+                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=NEXT_PAGE, page=1), listItem, True)
 
     def Do_TOP_DOWNLOADS(self):
         html = urllib.urlopen("http://kinobaza.tv/ratings/top-downloadable").read()

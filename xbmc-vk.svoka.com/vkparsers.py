@@ -17,13 +17,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = 'Volodymyr Shcherban'
 
-import urllib, urllib2, re, urlparse, cookielib
+import urllib, urllib2, re, cookielib, base64
 import vkapp
 
 try:
     import json
 except ImportError:
     import simplejson as json
+
+def GetVideoFilesAPI(codedFiles):
+    files = json.loads(base64.decodestring(codedFiles))
+    external_url = files.get("external")
+    if external_url:
+        if "youtube" in external_url:
+            start = external_url.find("v=") + len('v=')
+            end = external_url.find('&', start)
+            if start <= len('embed/'):
+                return [external_url]
+            if end < 0:
+                end = None
+            return ["plugin://plugin.video.youtube/?action=play_video&videoid="+external_url[start:end]]
+        return [external_url]
+    ret = []
+    for v in files:
+        ret.append(files[v])
+    return ret
 
 
 def GetVideoFiles(url):
@@ -73,8 +91,8 @@ if __name__== '__main__':
     import sys
     if len(sys.argv) > 1:
         try:
-            url = "http://vk.com/" + re.findall(r"(video[-0-9]+[-_][0-9]+)",sys.argv[1])[0]
-	    print url
+            url = "http://vk.com/" + re.findall(r"(video[-0-9]+[-_][0-9]+)", sys.argv[1])[0]
+            print url
             for s in GetVideoFiles(url):
                 print s
         except Exception, e:

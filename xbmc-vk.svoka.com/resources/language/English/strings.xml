@@ -38,4 +38,7 @@
         <string id="30042">Groups Video</string>
         <string id="30043">Friends</string>
         <string id="30044">-- Next Page (%d) --</string>
+
+        <string id="30045">Auth token</string>
+
 </strings>
