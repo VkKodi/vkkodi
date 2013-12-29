@@ -21,7 +21,7 @@ __author__ = 'Volodymyr Shcherban'
 
 import sys, os, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
 
-from vkapp import GetApi, authUrlFile
+from vkapp import GetApi
 
 from xbmcvkui import HOME
 from xvaudio import XVKAudio
@@ -29,14 +29,13 @@ from xvimage import XVKImage
 from xvvideo import XVKVideo
 
 
-
 class XBMC_VK_UI_Factory:
     def GetUI(self, param, api, handle):
         #bloody hacks http://wiki.xbmc.org/index.php?title=Window_IDs
         id = xbmcgui.getCurrentWindowId()
-        if id in (10006,10024,10025,10028):
+        if id in (10006, 10024, 10025, 10028):
             return XVKVideo(param, handle, api)
-        elif id in (10005,10500,10501,10502):
+        elif id in (10005, 10500, 10501, 10502):
             return XVKAudio(param, handle, api)
         elif id in (10002,):
             return XVKImage(param, handle, api)
@@ -44,17 +43,17 @@ class XBMC_VK_UI_Factory:
             print "Invalid context: " + id
 
 
-def Main():
+def main():
     globHandle = int(sys.argv[1])
     globApi = GetApi()
     if globApi:
-        params = {"mode" : HOME}
+        params = {"mode": HOME}
         if sys.argv[2]:
             l = [s.split("=") for s in sys.argv[2][1:].split("&")]
-            l = map(lambda e: (e[0], urllib.unquote_plus(e[1])) , l)
+            l = map(lambda e: (e[0], urllib.unquote_plus(e[1])), l)
             params.update(dict(l))
 
-        ui = XBMC_VK_UI_Factory().GetUI(params,globApi, globHandle)
+        XBMC_VK_UI_Factory().GetUI(params, globApi, globHandle)
 
     else:
         listItem = xbmcgui.ListItem("-- something wrong, try again --")
@@ -62,10 +61,5 @@ def Main():
         xbmc.log("THIS IS THE END")
         raise Exception("Api is null")
 
-try:
-    Main()
-except Exception, e:
-    xbmc.log("CAUGHT ERROR" + str(e))
-    if os.path.isfile(authUrlFile):
-        os.remove(authUrlFile)
-    raise
+
+main()

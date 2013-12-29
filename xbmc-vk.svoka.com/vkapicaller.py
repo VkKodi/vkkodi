@@ -22,83 +22,35 @@ try:
     import json
 except ImportError:
     import simplejson as json
-import re
+
 
 try:
-   from hashlib import md5
+    from hashlib import md5
 except ImportError:
-   from md5 import md5
+    from md5 import md5
 
-def ApiFromURL(appId, url):
-    decoded=urllib.unquote(url)
-    start = decoded.find("{")
-    obj = json.loads(decoded[start:])
-    sid = obj["sid"]
-    mid = obj["mid"]
-    secret = obj["secret"]
-    return VkApp(appId, sid, mid, secret)
-
-def ApiFromURLNew(appId, url):
-    act = re.findall(r'access_token=(.*?)(?:$|&)', url)[0]
-    return VkAppNew(act)
-
-class VkAppNew:
-    def __init__(self, accessToken):
-        #param is API call parameters
-        self.param = {'access_token': accessToken }
-
-    def call(self, api, **vars):
-        v = dict()
-        v.update(self.param)
-        v.update(vars)
-
-        request = "&".join(["%s=%s" % (str(key), urllib.quote(str(v[key]))) for key in v.keys()])
-        request_url = "https://api.vk.com/method/" + api + "?" +request
-
-        reply = urllib.urlopen(request_url)
-        #resp = json.loads(replystr)
-        #replystr = reply.read()
-        resp = json.load(reply)
-        if "error" in resp:
-            raise Exception("Error, error! DATA: " + str(resp))
-        else:
-            return resp["response"]
-
+def ApiFromToken(token):
+    return VkApp(token)
 
 class VkApp:
-    def __init__(self, api_id, sid, mid, secret):
+    def __init__(self, access_token):
         #param is API call parameters
-        self.param = dict()
-        self.param["v"] = "3.0"
-        self.param["format"] = "JSON"
-        self.param["api_id"] = api_id
-        self.param["sid"] = sid
-        self.mid = str(mid)
-        self.secret = str(secret)
+        if not access_token:
+            raise Exception("Trying to create API without token")
+        self.param = {'access_token': access_token}
 
-    def call(self, api, **vars):
-        v = {"method" : api}
+    def call(self, api, **call_params):
+        v = dict()
         v.update(self.param)
-        v.update(vars)
-
-        keys= sorted(v.keys())
-
-        toCheck = "".join(["%s=%s" % (str(key), str(v[key])) for key in keys if key!="sid"])
-
-        toCheck = self.mid + toCheck + self.secret
-
-        v["sig"]=md5(toCheck).hexdigest()
+        v.update(call_params)
 
         request = "&".join(["%s=%s" % (str(key), urllib.quote(str(v[key]))) for key in v.keys()])
-        request_url = "http://vkontakte.ru/api.php?"+request
+        request_url = "https://api.vk.com/method/" + api + "?" + request
 
         reply = urllib.urlopen(request_url)
-        #replystr = reply.read()
-        #resp = json.loads(replystr)
         resp = json.load(reply)
         if "error" in resp:
             raise Exception("Error, error! DATA: " + str(resp))
         else:
             return resp["response"]
-
 
