@@ -184,41 +184,36 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
 
 
     def Do_SERIES(self):
-        html = urllib.urlopen("http://kinobaza.tv/series").read()
-        r = re.compile(r'<img width="207" src="(.*?)" alt="(.*?)" class="poster-pic" />.*?<a href="http://kinobaza.tv/film/(.*?)/.*?span class="english">(.*?)</span>', re.DOTALL)
-        res = r.findall(html)
-        for thumb, ru, id, en in res:
-            listItem = xbmcgui.ListItem(PrepareString(ru), en, thumb, thumb)
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASONS,id=id, thumb=thumb), listItem, True)
+        series = json.load(urllib.urlopen("http://api.myshows.ru/shows/top/all/"))
+        for s in series:
+            thumb = s.get('image') or ""
+            names = (PrepareString(s.get('title') or ""), PrepareString(s.get('ruTitle') or ""))
+            if all(names):
+                listItem = xbmcgui.ListItem(" / ".join(names), str(s.get('year') or ""), thumb, thumb)
+            else:
+                listItem = xbmcgui.ListItem(names[0] or names[1], str(s.get('year') or ""), thumb, thumb)
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASON_SERIES, id=s['id']), listItem, True)
 
-    def Do_SEASONS(self):
-        srl = minidom.parse(urllib.urlopen("http://kinobaza.tv/film/%s?format=xml" % self.params["id"]))
-        n = 1
-        for e in srl.getElementsByTagName("season"):
-            episodes = len(e.getElementsByTagName("episode"))
-            thumb = self.params["thumb"]
-            listItem = xbmcgui.ListItem(__language__(30014) % (n,episodes), "", thumb, thumb)
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEASON_SERIES, thumb=thumb,
-                                                                 id = self.params["id"], season = n), listItem, True)
-            n += 1
 
     def Do_SEASON_SERIES(self):
-        srl = minidom.parse(urllib.urlopen("http://kinobaza.tv/film/%s?format=xml" % self.params["id"]))
-        film = srl.getElementsByTagName("film")[0]
-        season = srl.getElementsByTagName("season")[int(self.params["season"])-1]
-        season_num = season.attributes["number"].value
-        for e in season.getElementsByTagName("episode"):
-            if not(e.attributes["description"].value or e.attributes["name"].value or e.attributes["original_name"].value):
-                continue
-            n = e.attributes["number"].value
-            thumb = self.params["thumb"]
-            title = e.attributes["name"].value or e.attributes["original_name"].value
-            desc = e.attributes["description"].value
-            title = __language__(30015) % n + (title and (u": " + title))
-            listItem =  xbmcgui.ListItem(PrepareString(title), desc, thumb, thumb)
-            q = "%s  %s   %s" % (film.attributes["name"].value,season_num, n)
+        show = json.load(urllib.urlopen("http://api.myshows.ru/shows/" + self.params["id"]))
+        film = PrepareString(show.get('ruTitle') or "") or PrepareString(show.get('title') or "")
+        episodes = show['episodes']
+        thumb = show.get('image')
+        srt = []
+        for eid in episodes:
+            e = episodes[eid]
+            title = e["title"]
+            desc = e["airDate"] or ""
+            title = __language__(30014) % (e['seasonNumber'], e['episodeNumber']) + (title and (u": " + title))
+            et = e.get('image') or thumb
+            listItem = xbmcgui.ListItem(PrepareString(title), desc, et, et)
+            q = "%s  %s  %s" % (film, e['seasonNumber'], e['episodeNumber'])
             q = q.encode('utf-8')
-            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=q), listItem, True)
+            srt.append((int(e['seasonNumber'])*1000 + int(e['episodeNumber']) , self.GetURL(mode=SEARCH, query=q), listItem))
+        for el in sorted(srt):
+            _, q, i = el
+            xbmcplugin.addDirectoryItem(self.handle, q, i, True)
 
     def Do_MY_VIDEOS(self):
         v = self.api.call("video.get", count=self.per_page)
