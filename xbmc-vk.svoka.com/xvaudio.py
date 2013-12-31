@@ -104,8 +104,13 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         title += a.get("title")
         d = unicode(datetime.timedelta(seconds=int(a["duration"])))
         listTitle = d + u" - " + title
+        listitem = xbmcgui.ListItem(PrepareString(listTitle))
+        print "\n\n\n\n\n\n\n\n"+str(a)+"\n\n\n\n\n"
+        listitem.setInfo(type='Music', infoLabels={'url': a["url"],
+                                                   'title': a.get("title") or "",
+                                                   'artist': a.get("artist") or "",
+                                                   'album': a.get("artist") or "",
+                                                   'duration': a.get('duration') or 0})
+        listitem.setProperty('mimetype', 'audio/mpeg')
 
-        listItem = xbmcgui.ListItem(PrepareString(listTitle) )
-        listItem.setInfo(type = 'music', infoLabels = {'title':title})
-
-        xbmcplugin.addDirectoryItem(self.handle, a["url"] , listItem, False)
+        xbmcplugin.addDirectoryItem(self.handle, a["url"], listitem, False)
