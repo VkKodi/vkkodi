@@ -7,5 +7,5 @@ then
 	rm xbmc-vk.svoka.com/gpl.txt
 else
 	echo "no params given, creating test 00 release"
-	zip -qr vk-xbmc.0.0.zip xbmc-vk.svoka.com
+	zip -qr xbmc-vk.svoka.com.zip xbmc-vk.svoka.com
 fi
