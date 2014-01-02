@@ -23,14 +23,15 @@ try:
 except ImportError:
     import simplejson as json
 
-
 try:
     from hashlib import md5
 except ImportError:
     from md5 import md5
 
+
 def ApiFromToken(token):
     return VkApp(token)
+
 
 class VkApp:
     def __init__(self, access_token):
@@ -50,7 +51,9 @@ class VkApp:
         reply = urllib.urlopen(request_url)
         resp = json.load(reply)
         if "error" in resp:
+            import xbmcaddon, xbmc
+            xbmc.log("Resetting API Token :( Don't really know what to do with errors.")
+            xbmcaddon.Addon(id='xbmc-vk.svoka.com').setSetting('auth_token', "")
             raise Exception("Error, error! DATA: " + str(resp))
         else:
             return resp["response"]
-

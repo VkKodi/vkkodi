@@ -1,11 +1,7 @@
 #!/bin/sh
-if [ $# -eq 1 ]
-then
-	echo "Congrantulations!!! vk-xbmc.$1 released"
-	cp gpl.txt xbmc-vk.svoka.com/
-	zip -qr vk-xbmc.$1.zip xbmc-vk.svoka.com
-	rm xbmc-vk.svoka.com/gpl.txt
-else
-	echo "no params given, creating test 00 release"
-	zip -qr xbmc-vk.svoka.com.zip xbmc-vk.svoka.com
-fi
+rm -f xbmc-vk.svoka.com.zip
+find xbmc-vk.svoka.com -name "*.pyc" | xargs -I {} rm -v "{}"
+find xbmc-vk.svoka.com -name ".DS_Store" | xargs -I {} rm -rfv "{}"
+find xbmc-vk.svoka.com -name ".idea" | xargs -I {} rm -rfv "{}"
+
+zip -qr xbmc-vk.svoka.com.zip xbmc-vk.svoka.com
