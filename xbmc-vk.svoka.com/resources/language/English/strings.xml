@@ -40,5 +40,7 @@
         <string id="30044">-- Next Page (%d) --</string>
 
         <string id="30045">Auth token</string>
+        <string id="30046">-- Previous Page (%d) --</string>
+
 
 </strings>
