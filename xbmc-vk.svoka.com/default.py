@@ -27,7 +27,7 @@ from xbmcvkui import HOME
 from xvaudio import XVKAudio
 from xvimage import XVKImage
 from xvvideo import XVKVideo
-
+import urlparse
 
 class XBMC_VK_UI_Factory:
     def GetUI(self, param, api, handle):
@@ -49,9 +49,7 @@ def main():
     if globApi:
         params = {"mode": HOME}
         if sys.argv[2]:
-            l = [s.split("=") for s in sys.argv[2][1:].split("&")]
-            l = map(lambda e: (e[0], urllib.unquote_plus(e[1])), l)
-            params.update(dict(l))
+            params.update(dict(urlparse.parse_qsl(sys.argv[2][1:])))
 
         XBMC_VK_UI_Factory().GetUI(params, globApi, globHandle)
 
