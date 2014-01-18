@@ -51,9 +51,6 @@ class VkApp:
         reply = urllib.urlopen(request_url)
         resp = json.load(reply)
         if "error" in resp:
-            import xbmcaddon, xbmc
-            xbmc.log("Resetting API Token :( Don't really know what to do with errors.")
-            xbmcaddon.Addon(id='xbmc-vk.svoka.com').setSetting('auth_token', "")
             raise Exception("Error, error! DATA: " + str(resp))
         else:
             return resp["response"]
