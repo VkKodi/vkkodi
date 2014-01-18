@@ -115,6 +115,11 @@ class XBMCVkUI_Base:
     def processFriendEntry(self, uid):
         pass
 
+    def Do_LOGOUT(self):
+        __settings__.setSetting('auth_token', "")
+        __settings__.setSetting('username', "")
+
+
 
 import xbmc,xbmcaddon, xbmcgui
 

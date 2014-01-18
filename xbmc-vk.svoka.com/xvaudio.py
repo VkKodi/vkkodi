@@ -55,6 +55,8 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         listItem = xbmcgui.ListItem(__language__(30024))
         xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=POPULAR_MUSIC) , listItem, True)
         self.friendsEntry("music")
+        listItem = xbmcgui.ListItem(__language__(30020))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode="LOGOUT"), listItem, True)
 
     def processFriendEntry(self, uid):
         for a in self.api.call("audio.get", uid=uid):

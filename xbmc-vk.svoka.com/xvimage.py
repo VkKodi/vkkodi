@@ -40,6 +40,8 @@ class XVKImage(XBMCVkUI_Base):
             listItem = xbmcgui.ListItem(title, title2, thumb, thumb, ) #search history
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM, album=id, user=owner) , listItem, True)
         self.friendsEntry("image")
+        listItem = xbmcgui.ListItem(__language__(30020))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode="LOGOUT"), listItem, True)
 
 
             
