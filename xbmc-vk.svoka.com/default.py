@@ -31,6 +31,15 @@ import urlparse
 
 class XBMC_VK_UI_Factory:
     def GetUI(self, param, api, handle):
+
+        content_type = param.get('content_type')
+        if content_type == 'video':
+            return XVKVideo(param, handle, api)
+        elif content_type == 'audio':
+            return XVKAudio(param, handle, api)
+        elif content_type == 'image':
+            return XVKImage(param, handle, api)
+        #fallback if no content_type provided
         #bloody hacks http://wiki.xbmc.org/index.php?title=Window_IDs
         id = xbmcgui.getCurrentWindowId()
         if id in (10006, 10024, 10025, 10028):
@@ -40,7 +49,7 @@ class XBMC_VK_UI_Factory:
         elif id in (10002,):
             return XVKImage(param, handle, api)
         else:
-            print "Invalid context: " + id
+            print "Invalid context: " + str(id)
 
 
 def main():
