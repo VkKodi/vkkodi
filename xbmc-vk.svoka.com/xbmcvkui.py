@@ -64,49 +64,22 @@ class XBMCVkUI_Base:
         type = self.params["type"]
 
         #we have 'music', 'video', 'image'
+        call_params={"fields": 'uid,first_name,last_name,photo_big,nickname', "order": 'hints', "v": "5.7"}
         if type == 'music':
-            #get only frineds, who shared audio with us
-            code = """
-                var usersFromApi = API.friends.get({"fields": "uid"});
-                var i = 0;
-                var users = usersFromApi@.uid;
+            call_params["fields"] += ",can_see_audio"
+        resp = self.api.call('friends.get', **call_params)
 
-                usersFromApi = API.users.get({"user_ids": users, 
-                "fields": "id,first_name,last_name,photo_big,nickname,can_see_audio,deactivated"});
-
-                //remove users, who hide audio records
-                users = [];
-                var val;
-                while(i < usersFromApi.length) {
-                    val = usersFromApi[i];
-                    if(parseInt(val.can_see_audio) > 0) {
-                        users = users + [val];
-                    }
-
-                    i = i+1;
-                }
-
-                return users;
-            """
-            resp = self.api.call('execute', code=code)
-        else:
-            resp = self.api.call('friends.get',fields='uid,first_name,last_name,photo_big,nickname')
-        
-        friends = resp[1:]
+        friends = resp['items']
         for friend in friends:
+            if 'deactivated' in friend:
+                continue
+            if type == 'music' and not friend.get('can_see_audio'):
+                continue
             name = "%s %s" % (friend.get('last_name'), friend.get('first_name'))
             if friend.get('nickname'):
-                name += friend.get('nickname')
+                name += " " + friend.get('nickname')
             listItem = xbmcgui.ListItem(name, "", friend['photo_big'])
-            
-            if "uid" in friend:
-                uid = friend['uid']
-            elif "id" in friend:
-                uid = friend['id']
-            
-            #remove deactivated users from list
-            if "deactivated" not in friend:
-                xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIEND_ENTRY, uid=uid, thumb=friend['photo_big']), listItem, True)
+            xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=FRIEND_ENTRY, uid=friend['id'], thumb=friend['photo_big']), listItem, True)
 
     def Do_FRIEND_ENTRY(self):
         uid = self.params["uid"]
