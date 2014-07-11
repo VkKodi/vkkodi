@@ -116,7 +116,10 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             __settings__.setSetting("downloadCmd", downloadCmd)
 
         url = base64.decodestring(self.params["v"])
-        os.system(downloadCmd + " " + url)
+        if '{url}' in downloadCmd:
+            os.system(downloadCmd.replace('{url}', url))
+        else:
+            os.system(downloadCmd + " " + url)
         
 
     def Do_HOME(self):
