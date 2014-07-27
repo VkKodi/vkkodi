@@ -21,6 +21,8 @@ __author__ = 'Volodymyr Shcherban'
 
 import sys, os, xbmcaddon, xbmc, xbmcgui, xbmcplugin, urllib
 
+sys.path.append(xbmcaddon.Addon(id='xbmc-vk.svoka.com').getAddonInfo('path').decode('utf-8'))
+
 from vkapp import GetApi
 
 from xbmcvkui import HOME
