@@ -30,9 +30,6 @@ saved_search_file = os.path.join(xbmc.translatePath('special://temp/').decode('u
 #modes
 ALBUM = "ALBUM"
 
-
-
-
 class XVKImage(XBMCVkUI_Base):
 
     def Do_HOME(self):
@@ -76,7 +73,7 @@ class XVKImage(XBMCVkUI_Base):
             albums=self.api.call("photos.getAlbums", need_covers=1)
         items = []
         for a in albums:
-            print a.get('thumb_src')
+            xbmc.log(a.get('thumb_src'),xbmc.LOGDEBUG)
             e = ( a["title"] + unicode(" (%s photo)" % a["size"]),
                   a["description"],
                   a.get('thumb_src'),
