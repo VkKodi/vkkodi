@@ -107,7 +107,7 @@ class XVKAudio(XBMCVkUI_VKSearch_Base):
         d = unicode(datetime.timedelta(seconds=int(a["duration"])))
         listTitle = d + u" - " + title
         listitem = xbmcgui.ListItem(PrepareString(listTitle))
-        print "\n\n\n\n\n\n\n\n"+str(a)+"\n\n\n\n\n"
+        xbmc.log(str(a),xbmc.LOGDEBUG)
         listitem.setInfo(type='Music', infoLabels={'title': a.get("title") or "",
                                                    'artist': a.get("artist") or "",
                                                    'album': a.get("artist") or "",
