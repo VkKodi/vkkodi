@@ -65,6 +65,8 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
             xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=SEARCH, query=self.searchTweaks["q"], hd = "1") , listItem, True)
         if __settings__.getSetting('sortLen') == 'true':
             self.searchTweaks["sort"] = "1"
+        if __settings__.getSetting("SafeSearch") == "false":
+            self.searchTweaks["adult"] = "1"
 
     def ProcessFoundEntry(self, a):
         duration = str(datetime.timedelta(seconds=int(a["duration"])))
