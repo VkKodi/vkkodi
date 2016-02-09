@@ -36,7 +36,8 @@
         <string id="30041">Показывать вариант "скачать"</string>
         <string id="30042">Группы</string>
         <string id="30043">Друзья</string>
-        <string id="30044">-- Следуящая Страница (%d) --</string>
+        <string id="30044">-- Следующая Страница (%d) --</string>
         <string id="30045">Ключ авторизации</string>
-        <string id="30046">-- Предадущая Страница (%d) --</string>
+        <string id="30046">-- Предыдущая Страница (%d) --</string>
+       <string id="40001">Безопасный поиск</string>
 </strings>
