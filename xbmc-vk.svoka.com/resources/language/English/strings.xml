@@ -42,5 +42,6 @@
         <string id="30045">Auth token</string>
         <string id="30046">-- Previous Page (%d) --</string>
        <string id="40001">Safe search</string>
+       <string id="40002">-- Albums --</string>
 
 </strings>
