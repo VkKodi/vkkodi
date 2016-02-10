@@ -43,7 +43,7 @@ VIDEO_DOWNLOAD = "VIDEO_DOWNLOAD"
 GROUP_VIDEO = "GROUP_VIDEO"
 GROUPS = "GROUPS"
 
-# ALBUM_VIDEO = "ALBUM_VIDEO"
+ALBUM_VIDEO = "ALBUM_VIDEO"
 
 
 
@@ -160,6 +160,10 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
     def Do_GROUP_VIDEO(self):
         gid = self.params["gid"]
         self.prevPage(gid=gid)
+
+        listItem = xbmcgui.ListItem(__language__(40002))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM_VIDEO, owner_id="-"+gid), listItem, True)
+
         v = self.api.call('video.get', gid=gid, count=self.per_page, offset=self.offset)
         if v:
             for a in v[1:]:
@@ -169,6 +173,10 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
 
     def processFriendEntry(self, uid):
         self.prevPage(uid=uid)
+
+        listItem = xbmcgui.ListItem(__language__(40002))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM_VIDEO, owner_id=uid), listItem, True)
+
         v = self.api.call('video.get', uid=uid, count=self.per_page, offset=self.offset)
         if v:
             for a in v[1:]:
@@ -217,7 +225,35 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
 
     def Do_MY_VIDEOS(self):
         self.prevPage()
+        #Albums item
+        self_vk_id = 0
+        v = self.api.call("users.get")
+        if v:
+            self_vk_id = v[0]["uid"]
+        listItem = xbmcgui.ListItem(__language__(40002))
+        xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode=ALBUM_VIDEO, owner_id=self_vk_id), listItem, True)
+
         v = self.api.call("video.get", count=self.per_page, offset=self.offset)
+        if v:
+            for a in v[1:]:
+                self.ProcessFoundEntry(a)
+        self.nextPage(v)
+
+    def Do_ALBUM_VIDEO(self):
+        self.prevPage()
+        owner_id = self.params.get("owner_id") or ""
+        v = self.api.call("video.getAlbums", owner_id=owner_id)
+        if v:
+            for a in v[1:]:
+		title = PrepareString(a["title"])
+		listItem = xbmcgui.ListItem(title, "")
+		xbmcplugin.addDirectoryItem(self.handle, self.GetURL(mode="VIDEO_ALBUM_LIST", album_id=a["album_id"], owner_id=owner_id), listItem, True)
+        self.nextPage(v)
+
+    def Do_VIDEO_ALBUM_LIST(self):
+        self.prevPage()
+        owner_id = self.params.get("owner_id") or ""
+        v = self.api.call("video.get", count=self.per_page, offset=self.offset, album_id=self.params["album_id"], owner_id=owner_id)
         if v:
             for a in v[1:]:
                 self.ProcessFoundEntry(a)
