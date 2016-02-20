@@ -12,11 +12,11 @@ This add-on allows to browse media from VKontakte social network within XBMC med
 #### русский перевод ниже
 
 ### Info
-This is free software. Information about author and source code available at http://code.svoka.com/vk-xbmc-plugin
+This is free software. Information about author and source code available at https://github.com/VkKodi/vkkodi
 
 ### Installation instruction
 
-* download latest zip from http://code.svoka.com/vk-xbmc-plugin/downloads
+* download latest zip release: https://github.com/VkKodi/repo/raw/master/addons/xbmc-vk.svoka.com.zip
 * in XBMC follow menu "SYSTEM -> Add-ons -> Install from zip file"
 * select downloaded file
 * return to main XBMC menu and select Video -> Video Addons -> VK-xmbc
@@ -29,7 +29,7 @@ If you did setup add-on properly, it is going to show you text input whenever yo
 After you'll get list of videos with preview pictures and length. After selectin name of video you should get list of available resolutions. Select one to begin playback.
 
 ### Notice
-This is free software in extremely early alpha. You can make it better by forking and contributing code, reporting issues or creating feature requests using [[http://code.svoka.com/vk-xbmc-plugin/issues|issue tracker]]
+This is free software in extremely early alpha. You can make it better by forking and contributing code, reporting issues or creating feature requests using [[https://github.com/VkKodi/vkkodi/issues|issue tracker]]
 
 **Cheers**
 
@@ -38,11 +38,11 @@ This is free software in extremely early alpha. You can make it better by forkin
 ## Краткий курс об vk-xbmc-plugin
 
 ### Что? Где?
-Это свободное ПО. Информацию об авторе и всякое другое лежит по адресу http://code.svoka.com/vk-xbmc-plugin
+Это свободное ПО. Информацию об авторе и всякое другое лежит по адресу https://github.com/VkKodi/vkkodi
 
 ### Установка
 * **XBMC версии 10 Dharma и выше: **:
-* скачайте последний zip файл  с http://code.svoka.com/vk-xbmc-plugin/downloads
+* скачайте последний zip файл: https://github.com/VkKodi/repo/raw/master/addons/xbmc-vk.svoka.com.zip
 * В XBMC меню откройте "SYSTEM -> Add-ons -> Install from zip file (Установка с zip архива)"
 * выберите скачанный только что файл
 * Вернитесь в главное меню XBMC, и выберите  Video -> Video Addons -> VK-xmbc
