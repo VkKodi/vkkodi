@@ -110,18 +110,22 @@ class XVKVideo(XBMCVkUI_VKSearch_Base):
 
     def Do_VIDEO_DOWNLOAD(self):
         downloadCmd = __settings__.getSetting("downloadCmd")
+        url = base64.decodestring(self.params["v"])
         if not downloadCmd:
-            if xbmc.getCondVisibility("system.platform.windows"):
+            if xbmc.getCondVisibility("system.platform.android"):
+                cmd = 'StartAndroidActivity("", "android.intent.action.VIEW", "", "%s")' % ( url )
+                xbmc.executebuiltin(cmd)
+            elif xbmc.getCondVisibility("system.platform.windows"):
                 downloadCmd = "start"
             else:
                 downloadCmd = "open"
-            __settings__.setSetting("downloadCmd", downloadCmd)
 
-        url = base64.decodestring(self.params["v"])
-        if '{url}' in downloadCmd:
-            os.system(downloadCmd.replace('{url}', url))
-        else:
-            os.system(downloadCmd + " " + url)
+        if downloadCmd:
+            __settings__.setSetting("downloadCmd", downloadCmd)
+            if '{url}' in downloadCmd:
+                os.system(downloadCmd.replace('{url}', url))
+            else:
+                os.system(downloadCmd + " " + url)
         
 
     def Do_HOME(self):
