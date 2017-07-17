@@ -52,7 +52,10 @@ class XBMCVkAppCreator:
         while not token and count > 0:
             count -= 1
             login, password = self._askLogin()
-            token = auth(login, password, APP_ID, "KUPNPTTQGApLFVOVgqdx", 'friends,groups,photos,audio,video,offline')
+            token = auth(login, password, APP_ID, "KUPNPTTQGApLFVOVgqdx", 'friends,groups,photos,audio,video,offline',"0")
+            if token == "-1":
+                code = self._askCode()
+                token = auth(login, password, APP_ID, "KUPNPTTQGApLFVOVgqdx", 'friends,groups,photos,audio,video,offline',code)
             if token:
                 __settings__.setSetting('auth_token', token)
         return token
@@ -75,6 +78,16 @@ class XBMCVkAppCreator:
                 raise Exception("Password input was cancelled.")
         else:
             raise Exception("Login input was cancelled.")
+
+    def _askCode(self):
+        code_keyboard = xbmc.Keyboard()
+        code_keyboard.setHeading(__language__(30050))
+        code_keyboard.setHiddenInput(False)
+        code_keyboard.doModal()
+        if code_keyboard.isConfirmed():
+            return code_keyboard.getText()
+        else:
+            raise Exception("2FA Code input was cancelled")
 
 
 appManager = XBMCVkAppCreator()
