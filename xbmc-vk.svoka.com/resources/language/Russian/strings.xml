@@ -17,14 +17,15 @@
         <string id="30015">Серия %s</string>
         <string id="30016">Популярные исполнители</string>
         <string id="30017">Только HD видео</string>
-        <string id="30018">Сортировка видео по длинне</string>        
+        <string id="30018">Сортировка видео по длинне</string>
         <string id="30019">То же, только в HD</string>
         <string id="30020">Выйти из ВК</string>
         <string id="30021">-- Главное меню --</string>
+        <string id="30050">Код авторизации</string>
 
         <string id="30023">Рекомендованная музыка</string>
         <string id="30024">Популярная музыка</string>
-    
+
         <string id="30033">Сохранять файлы в...</string>
         <string id="30034">Скачать/Открыть:</string>
         <string id="30035">Скачать:</string>
