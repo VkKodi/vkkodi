@@ -46,7 +46,7 @@ class VkApp:
         v.update(call_params)
 
         request = "&".join(["%s=%s" % (str(key), urllib.quote(str(v[key]))) for key in v.keys()])
-        request_url = "https://api.vk.com/method/" + api + "?" + request
+        request_url = "https://api.vk.com/method/" + api + "?" + request + '&v=4.0'
 
         reply = urllib.urlopen(request_url)
         resp = json.load(reply)
